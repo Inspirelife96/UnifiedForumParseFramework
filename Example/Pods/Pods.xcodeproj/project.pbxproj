@@ -248,6 +248,8 @@
 		7C2BB2456996735563F2222E0C1598A2 /* PFFilePersistenceGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 97A95C09624CEA7B4315A66CAD5F2BAB /* PFFilePersistenceGroup.m */; };
 		7D4E153EA42718C4CC8E27EBAE32E95B /* UFPFPost.h in Headers */ = {isa = PBXBuildFile; fileRef = 59FC4FE9C12677A3B9525EBED12CB036 /* UFPFPost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7EBFC2E27C5B69A50CDD500C7C2B23E5 /* PFRESTUserCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = BB175ECBD3B8368A3CA9F804BAEC1D2E /* PFRESTUserCommand.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7F2FFFF6291A63D500710615 /* UFPFAppInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F2FFFF4291A63D500710615 /* UFPFAppInfo.h */; };
+		7F2FFFF7291A63D500710615 /* UFPFAppInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F2FFFF5291A63D500710615 /* UFPFAppInfo.m */; };
 		7F3F5CB81EEFC6D30DDCEDD97266A193 /* PFCachedQueryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82CD51457D36CF068B9B0D14A0D67B42 /* PFCachedQueryController.m */; };
 		7FDFDB097B4A963ECFDF5D6B0C2363EA /* UFPFPostLike.h in Headers */ = {isa = PBXBuildFile; fileRef = F66A23ADBC6E675B22FB7081DB3EB0B7 /* UFPFPostLike.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8015E48CE4660F9021A8E4E15854EB79 /* PFObject+Deprecated.h in Headers */ = {isa = PBXBuildFile; fileRef = 625B033063EABF0029371490E4B63CD5 /* PFObject+Deprecated.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -822,6 +824,8 @@
 		7DD28951607D9F9B9957209857552754 /* BFCancellationTokenSource.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = BFCancellationTokenSource.h; path = Bolts/Common/BFCancellationTokenSource.h; sourceTree = "<group>"; };
 		7DEF5FD7F9A90BF0C8D63F6B5950A052 /* PFConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PFConstants.h; path = Parse/Parse/PFConstants.h; sourceTree = "<group>"; };
 		7DF29AA8DE57B9A7695E11627C33C190 /* BFCancellationTokenRegistration.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = BFCancellationTokenRegistration.m; path = Bolts/Common/BFCancellationTokenRegistration.m; sourceTree = "<group>"; };
+		7F2FFFF4291A63D500710615 /* UFPFAppInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UFPFAppInfo.h; path = UnifiedForumParseFramework/Classes/UFPFAppInfo.h; sourceTree = "<group>"; };
+		7F2FFFF5291A63D500710615 /* UFPFAppInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UFPFAppInfo.m; path = UnifiedForumParseFramework/Classes/UFPFAppInfo.m; sourceTree = "<group>"; };
 		7FD23ABF496A2823D0E152493D3F1EA8 /* UFPFReplyLike.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UFPFReplyLike.m; path = UnifiedForumParseFramework/Classes/UFPFReplyLike.m; sourceTree = "<group>"; };
 		802BC9DC646D80C88FFAC0070392AF38 /* PFObjectEstimatedData.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PFObjectEstimatedData.h; path = Parse/Parse/Internal/Object/EstimatedData/PFObjectEstimatedData.h; sourceTree = "<group>"; };
 		80C251BC8885FBAAE8485A509B5C42DA /* PFCommandRunningConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PFCommandRunningConstants.h; path = Parse/Parse/Internal/Commands/CommandRunner/PFCommandRunningConstants.h; sourceTree = "<group>"; };
@@ -1661,6 +1665,8 @@
 		58350504EDF7BA57DD17A37EF406AEF7 /* UnifiedForumParseFramework */ = {
 			isa = PBXGroup;
 			children = (
+				7F2FFFF4291A63D500710615 /* UFPFAppInfo.h */,
+				7F2FFFF5291A63D500710615 /* UFPFAppInfo.m */,
 				1A656E93F9D88923EFEDA6EEED0FC8B2 /* UFPFBadgeCount.h */,
 				5458EEDC38D105076ADF9B19051BD32F /* UFPFBadgeCount.m */,
 				71C9F480124865FE331E07C6F92ACD06 /* UFPFBlock.h */,
@@ -1905,6 +1911,7 @@
 				787205E39B74546DF057C4B952D36C29 /* UFPFService+Session.h in Headers */,
 				C5A54137FE0EA2C06C2ABD3F16668E56 /* UFPFService+Share.h in Headers */,
 				F8FDD50795FD59BC231F6954B74115A7 /* UFPFService+Topic.h in Headers */,
+				7F2FFFF6291A63D500710615 /* UFPFAppInfo.h in Headers */,
 				C85F18CB6C2EE964CC655C718936AF91 /* UFPFService+TopicLike.h in Headers */,
 				180B624F70D8ACE74BBF9AE842FB9738 /* UFPFService+TopicReport.h in Headers */,
 				6796B93A642DEB542D4E559455A44CCB /* UFPFService+User.h in Headers */,
@@ -2546,6 +2553,7 @@
 				9CA3B3C4E725313BFB6C8A943FBC3BFB /* UFPFBlock.m in Sources */,
 				4D3066C0060BDE2528FB591ACDA77CB9 /* UFPFCategory.m in Sources */,
 				61D54DA66E6290CF46C6E3BCF17DC63C /* UFPFFollow.m in Sources */,
+				7F2FFFF7291A63D500710615 /* UFPFAppInfo.m in Sources */,
 				D5F32FBD0D19AB96D1D4E2572243180C /* UFPFMessage.m in Sources */,
 				C0BD376E973C87F60A90B2F81FF129F5 /* UFPFMessageGroup.m in Sources */,
 				0848728E80C230C71F75C763E38C1DB3 /* UFPFNotification.m in Sources */,

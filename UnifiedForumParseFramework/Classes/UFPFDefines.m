@@ -87,9 +87,9 @@ NSString *const PFUserKeyClass = @"_User";
 NSString *const UFPFUserKeyIsLocked = @"isLocked";
 NSString *const UFPFUserKeyIsDeleted = @"isDeleted";
 NSString *const UFPFUserKeyStatisticsInfo = @"statisticsInfo";
-NSString *const UFPFUserKeyProfileImage = @"profileImage";
+NSString *const UFPFUserKeyAvatar = @"avatar";
 NSString *const UFPFUserKeyBackgroundImage = @"backgroundImage";
-NSString *const UFPFUserKeySignature = @"signature";
+NSString *const UFPFUserKeyBio = @"bio";
 NSString *const UFPFUserKeyBadgeCount = @"badgeCount";
 NSString *const UFPFUserKeyPreferredLanguage = @"preferredLanguage";
 
@@ -399,5 +399,16 @@ NSString *const UFPFBadgeCountKeyLikeCount = @"likeCount";
 NSString *const UFPFBadgeCountKeyFollowCount = @"followCount";
 NSString *const UFPFBadgeCountKeyMessageCount = @"messageCount";
 NSString *const UFPFBadgeCountKeyOtherCount = @"otherCount";
+
+
+# pragma mark - AppInfo 表
+
+// AppInfo表 保存应用的相关信息
+
+// Class key
+NSString *const UFPFAppInfoKeyClass = @"AppInfo";
+
+// Field keys
+NSString *const UFPFAppInfoKeyUser = @"version";
 
 

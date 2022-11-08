@@ -135,9 +135,9 @@ extern NSString *const PFUserKeyClass;
 extern NSString *const UFPFUserKeyIsLocked;
 extern NSString *const UFPFUserKeyIsDeleted;
 extern NSString *const UFPFUserKeyStatisticsInfo;
-extern NSString *const UFPFUserKeyProfileImage;
+extern NSString *const UFPFUserKeyAvatar;
 extern NSString *const UFPFUserKeyBackgroundImage;
-extern NSString *const UFPFUserKeySignature;
+extern NSString *const UFPFUserKeyBio;
 extern NSString *const UFPFUserKeyBadgeCount;
 extern NSString *const UFPFUserKeyPreferredLanguage;
 
@@ -464,3 +464,13 @@ extern NSString *const UFPFBadgeCountKeyLikeCount;
 extern NSString *const UFPFBadgeCountKeyFollowCount;
 extern NSString *const UFPFBadgeCountKeyMessageCount;
 extern NSString *const UFPFBadgeCountKeyOtherCount;
+
+# pragma mark - AppInfo 表
+
+// AppInfo表 保存应用的相关信息
+
+// Class key
+extern NSString *const UFPFAppInfoKeyClass;
+
+// Field keys
+extern NSString *const UFPFAppInfoKeyVersion;

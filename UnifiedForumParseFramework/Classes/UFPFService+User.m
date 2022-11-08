@@ -37,67 +37,7 @@
     }
 }
 
-+ (void)logInWithAnonymous:(NSError **)error {
-    __block NSError *loginError = nil;
-    // 调用Parse Server的API进行匿名登录
-    [[[PFAnonymousUtils logInInBackground] continueWithBlock:^id _Nullable(BFTask<PFUser *> * _Nonnull task) {
-        loginError = task.error;
-        if (!task.isCancelled && !task.error) {
-            PFUser *user = task.result;
-            
-            if (user) {
-                BOOL succeeded = NO;
-                if (user.isNew) {
-                    // 如果是第一次登录，那么等同于注册，进行注册的后续处理
-                    succeeded = [UFPFService _configUserAfterSignUp:user error:&loginError];
-                } else {
-                    // 如果不是第一次登录，那么等同于登录，进行登录的后续处理
-                    succeeded = [UFPFService _configUserAfterLogin:user error:&loginError];
-                }
-                
-                if (!succeeded) {
-                    [UFPFService logOut];
-                }
-            }
-        }
-        
-        return task;
-    }] waitUntilFinished];
-    
-    *error = loginError;
-}
-
-+ (void)upgradeAnonymousUser:(PFUser *)user withUsername:(NSString *)userName password:(NSString *)password email:(NSString *)email error:(NSError **)error {
-    user.username = userName;
-    user.password = password;
-    user.email = email;
-    
-    [user signUp:error];
-    
-    return;
-}
-
-+ (void)signUpWithUsername:(NSString *)userName password:(NSString *)password email:(NSString *)email error:(NSError **)error {
-    // 创建user
-    PFUser *user = [PFUser user];
-    user.username = userName;
-    user.password = password;
-    user.email = email;
-    
-    // 调用signUp注册
-    BOOL succeeded = [user signUp:error];
-    
-    if (succeeded) {
-        succeeded = [UFPFService _configUserAfterSignUp:user error:error];
-        if (!succeeded) {
-            [UFPFService logOut];
-        }
-    } else {
-        return;
-    }
-}
-
-+ (BFTask *)loginWithAppleAuthType:(NSString *)authType authData:(NSDictionary<NSString *, NSString *> *)authData username:(NSString *)userName email:(NSString *)email error:(NSError **)error {
++ (BOOL)loginWithAppleAuthType:(NSString *)authType authData:(NSDictionary<NSString *, NSString *> *)authData error:(NSError **)error {
     __block BFTask *appleAuthTask;
     
     __block NSError *loginError = nil;
@@ -130,7 +70,72 @@
     
     *error = loginError;
     
-    return appleAuthTask;
+    return appleAuthTask.isCompleted;
+}
+
++ (void)logInWithAnonymous:(NSError **)error {
+    __block NSError *loginError = nil;
+    // 调用Parse Server的API进行匿名登录
+    [[[PFAnonymousUtils logInInBackground] continueWithBlock:^id _Nullable(BFTask<PFUser *> * _Nonnull task) {
+        loginError = task.error;
+        if (!task.isCancelled && !task.error) {
+            PFUser *user = task.result;
+            
+            if (user) {
+                BOOL succeeded = NO;
+                if (user.isNew) {
+                    // 如果是第一次登录，那么等同于注册，进行注册的后续处理
+                    succeeded = [UFPFService _configUserAfterSignUp:user error:&loginError];
+                } else {
+                    // 如果不是第一次登录，那么等同于登录，进行登录的后续处理
+                    succeeded = [UFPFService _configUserAfterLogin:user error:&loginError];
+                }
+                
+                if (!succeeded) {
+                    [UFPFService logOut];
+                }
+            }
+        }
+        
+        return task;
+    }] waitUntilFinished];
+    
+    *error = loginError;
+}
+
++ (void)upgradeCurrentAnonymousUserWithUsername:(NSString *)userName password:(NSString *)password email:(NSString *)email error:(NSError **)error {
+    NSAssert([PFUser currentUser], @"Current User Must Exists");
+    NSAssert([PFAnonymousUtils isLinkedWithUser:[PFUser currentUser]], @"Current User Must a Anonymous User");
+    
+    PFUser *user = [PFUser currentUser];
+    
+    user.username = userName;
+    user.password = password;
+    user.email = email;
+    
+    [user signUp:error];
+    
+    return;
+}
+
++ (void)signUpWithUsername:(NSString *)userName password:(NSString *)password email:(NSString *)email error:(NSError **)error {
+    // 创建user
+    PFUser *user = [PFUser user];
+    user.username = userName;
+    user.password = password;
+    user.email = email;
+    
+    // 调用signUp注册
+    BOOL succeeded = [user signUp:error];
+    
+    if (succeeded) {
+        succeeded = [UFPFService _configUserAfterSignUp:user error:error];
+        if (!succeeded) {
+            [UFPFService logOut];
+        }
+    } else {
+        return;
+    }
 }
 
 + (void)logOut {
@@ -165,19 +170,21 @@
     // 提取statisticsInfo
     BOOL succeeded =  [UFPFService _fetchStatisticsInfoForUser:user error:error];
     
+    // 提取BadgeCount
     if (succeeded) {
         succeeded = [UFPFService _fetchBadgeCountForUser:user error:error];
     }
     
+    // 设置语言
+    if (succeeded) {
+        succeeded = [UFPFService _setPreferredLanguageForUser:user error:error];
+    }
+
     // 将当前用户和当前设备进行关联
     if (succeeded) {
         succeeded = [UFPFService linkCurrentInstalltionWithCurrentUser:error];
     }
-    
-    if (succeeded) {
-        succeeded = [UFPFService _setPreferredLanguageForUser:user error:error];
-    }
-    
+        
     // 当前Session为激活的session，删除其他过期的Session
     if (succeeded) {
         succeeded = [UFPFService removeInvalidSessions:error];
@@ -200,14 +207,17 @@
         succeeded = [UFPFService _fetchStatisticsInfoForUser:user error:error];
     }
     
+    // 创建BadgeCount并关联
     if (succeeded) {
         succeeded = [UFPFService _createBadgeCountForUser:user error:error];
     }
     
+    // 加载BadgeCount
     if (succeeded) {
         succeeded = [UFPFService _fetchBadgeCountForUser:user error:error];
     }
     
+    // 设置语言
     if (succeeded) {
         succeeded = [UFPFService _setPreferredLanguageForUser:user error:error];
     }
@@ -240,7 +250,6 @@
 }
 
 + (BOOL)_unsubscribeUser:(PFUser *)user error:(NSError **)error {
-    
     [user setObject:@(YES) forKey:UFPFUserKeyIsDeleted];
     return [user save:error];
 }

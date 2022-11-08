@@ -1,0 +1,16 @@
+PODS:
+  - UnifiedForumParseFramework (0.1.0)
+
+DEPENDENCIES:
+  - UnifiedForumParseFramework (from `../`)
+
+EXTERNAL SOURCES:
+  UnifiedForumParseFramework:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  UnifiedForumParseFramework: bb300d40b608bf1e642bd716d060f131d8ff2480
+
+PODFILE CHECKSUM: 31dfed8818ed216ed49899d37d1a3389e7a24a89
+
+COCOAPODS: 1.11.2

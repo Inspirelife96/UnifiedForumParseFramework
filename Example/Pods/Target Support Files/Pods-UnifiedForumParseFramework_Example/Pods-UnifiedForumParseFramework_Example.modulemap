@@ -1,0 +1,6 @@
+framework module Pods_UnifiedForumParseFramework_Example {
+  umbrella header "Pods-UnifiedForumParseFramework_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -21,17 +21,18 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/inspirelife@hotmail.com/UnifiedForumParseFramework'
+  s.homepage         = 'https://github.com/Inspirelife96/UnifiedForumParseFramework'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'inspirelife@hotmail.com' => 'inspirelife@hotmail.com' }
-  s.source           = { :git => 'https://github.com/inspirelife@hotmail.com/UnifiedForumParseFramework.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/Inspirelife96/UnifiedForumParseFramework.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '10.0'
 
   s.source_files = 'UnifiedForumParseFramework/Classes/**/*'
   
+  s.prefix_header_contents = '#import <Parse/Parse-umbrella.h>'
   # s.resource_bundles = {
   #   'UnifiedForumParseFramework' => ['UnifiedForumParseFramework/Assets/*.png']
   # }
@@ -39,4 +40,5 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Parse'
 end

@@ -10,3 +10,4 @@
 #endif
 #endif
 
+#import <Parse/Parse-umbrella.h>

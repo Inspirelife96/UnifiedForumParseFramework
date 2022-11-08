@@ -1,15 +1,28 @@
 PODS:
-  - UnifiedForumParseFramework (0.1.0)
+  - Bolts/Tasks (1.9.1)
+  - Parse (1.19.3):
+    - Parse/Core (= 1.19.3)
+  - Parse/Core (1.19.3):
+    - Bolts/Tasks (= 1.9.1)
+  - UnifiedForumParseFramework (0.1.0):
+    - Parse
 
 DEPENDENCIES:
   - UnifiedForumParseFramework (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Bolts
+    - Parse
 
 EXTERNAL SOURCES:
   UnifiedForumParseFramework:
     :path: "../"
 
 SPEC CHECKSUMS:
-  UnifiedForumParseFramework: bb300d40b608bf1e642bd716d060f131d8ff2480
+  Bolts: 8c1e8aab2f603387b8b9924f57d1d64f43d3ffdc
+  Parse: 0abb63a0ff6fa34a3f64b81d595a294e2ece143a
+  UnifiedForumParseFramework: 4564951ad806c85543255a52076c14d01fd3f0b8
 
 PODFILE CHECKSUM: 31dfed8818ed216ed49899d37d1a3389e7a24a89
 

@@ -82,6 +82,21 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
     }
 }
 
++ (BOOL)isFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error {
+    NSArray *followArray = [UFPFService _findFollowFromUser:fromUser toUser:toUser isDeleted:NO error:error];
+    
+    if (*error) {
+        return NO;
+    } else {
+        // 存在，则直接返回
+        if (followArray.count > 0) {
+            return YES;
+        } else {
+            return NO;
+        }
+    }
+}
+
 // 逻辑删除
 + (BOOL)deleteFollow:(UFPFFollow *)follow error:(NSError **)error {
     return [UFPFService _updateFollow:follow isDeleted:YES error:error];

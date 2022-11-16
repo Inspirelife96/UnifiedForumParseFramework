@@ -6,6 +6,11 @@
 //  Copyright (c) 2022 inspirelife@hotmail.com. All rights reserved.
 //
 
+#import <Parse/Parse-umbrella.h>
+#import <UFPFService.h>
+#import <UFPFService+Topic.h>
+#import <UFPFService+User.h>
+
 @import XCTest;
 
 @interface Tests : XCTestCase
@@ -17,7 +22,16 @@
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"oDzmpRypCHeD8K8bI8lD7yDpBGU1povw14h2dL9j";
+        configuration.clientKey = @"";
+        configuration.server = @"https://inspirelife2017.com/learnpaint2";
+        configuration.networkRetryAttempts = 0;
+        NSURLSessionConfiguration *URLSessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        URLSessionConfiguration.timeoutIntervalForRequest = 60.0f;
+        configuration.URLSessionConfiguration = URLSessionConfiguration;
+    }]];
 }
 
 - (void)tearDown
@@ -29,6 +43,22 @@
 - (void)testExample
 {
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+
+    
+    NSError *error = nil;
+    
+//    [UFPFService logInWithAnonymous:&error];
+    
+    NSArray *array = [UFPFService findTopicsOrderBy:@"createdAt" page:0 pageCount:10 error:&error];
+    
+    
+//    PFQuery *query = [PFQuery queryWithClassName:@"Topic"];
+//
+//    [query orderByDescending:@"createdAt"];
+//
+//    [query setLimit:5];
+//
+//    NSArray *array =  [query findObjects:&error];
 }
 
 @end

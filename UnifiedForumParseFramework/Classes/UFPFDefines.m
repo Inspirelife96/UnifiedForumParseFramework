@@ -106,7 +106,7 @@ NSString *const UFPFTopicKeyClass = @"Topic";
 NSString *const UFPFTopicKeyIsLocked = @"isLocked";
 NSString *const UFPFTopicKeyIsDeleted = @"isDeleted";
 NSString *const UFPFTopicKeyIsPrivate = @"isPrivate";
-NSString *const UFPFTopicKeyIsApproved = @"isArrpoved";
+NSString *const UFPFTopicKeyIsApproved = @"isApproved";
 NSString *const UFPFTopicKeyIsPopular = @"isPopular";
 
 // 核心字段：

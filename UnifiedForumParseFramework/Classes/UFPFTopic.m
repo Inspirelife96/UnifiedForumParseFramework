@@ -33,26 +33,4 @@
     return UFPFTopicKeyClass;
 }
 
-- (instancetype)init {
-    if (self = [super init]) {
-        self.isLocked = NO;
-        self.isDeleted = NO;
-        self.isPrivate = NO;
-        self.isApproved = NO;
-        self.isPopular = NO;
-        self.title = @"";
-        self.content = @"";
-        self.mediaFileObjects = @[];
-        self.mediaFileType = @"unknown";
-        self.fromUser = [PFUser currentUser];
-        self.postCount = @(0);
-        self.likeCount = @(0);
-        self.shareCount = @(0);
-        self.category = @"";
-        self.tags = @[];
-    }
-    
-    return self;
-}
-
 @end

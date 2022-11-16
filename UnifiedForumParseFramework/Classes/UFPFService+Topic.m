@@ -185,10 +185,10 @@
 
     // 默认条件1:软删除标记=NO
     [publicTopicsQuery whereKey:UFPFTopicKeyIsDeleted equalTo:@(NO)];
-    
+
     // 默认条件2:审核标记=YES
     [publicTopicsQuery whereKey:UFPFTopicKeyIsApproved equalTo:@(YES)];
-    
+
     // 默认条件3:私有标记=NO
     [publicTopicsQuery whereKey:UFPFTopicKeyIsPrivate equalTo:@(NO)];
     

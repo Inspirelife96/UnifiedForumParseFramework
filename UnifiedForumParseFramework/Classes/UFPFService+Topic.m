@@ -17,27 +17,27 @@
 @implementation UFPFService (Topic)
 
 // 0 无条件，直接查询Topic表，根据orderBy进行排序，例如查询热门的Topic。
-+ (NSArray<UFPFTopic *> *)findTopicsOrderBy:(NSString *)orderBy page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error {
-    return [UFPFService findTopicWithCategory:nil tag:nil fromUser:nil orderBy:orderBy page:page pageCount:pageCount error:error];
++ (NSArray<UFPFTopic *> *)findTopicsOrderBy:(NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error {
+    return [UFPFService findTopicWithCategory:nil tag:nil fromUser:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // 1 根据Category查询，一般用来展示某个板块的内容
-+ (NSArray<UFPFTopic *> *)findTopicsWithCategory:(NSString *)category orderBy:(NSString *)orderBy page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error{
-    return [UFPFService findTopicWithCategory:category tag:nil fromUser:nil orderBy:orderBy page:page pageCount:pageCount error:error];
++ (NSArray<UFPFTopic *> *)findTopicsWithCategory:(NSString *)category orderBy:(NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error{
+    return [UFPFService findTopicWithCategory:category tag:nil fromUser:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // 2 根据Tag查询，一般用来展示某个标签的内容
-+ (NSArray<UFPFTopic *> *)findTopicsWithTag:(NSString *)tag orderBy:(NSString *)orderBy page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error {
-    return [UFPFService findTopicWithCategory:nil tag:tag fromUser:nil orderBy:orderBy page:page pageCount:pageCount error:error];
++ (NSArray<UFPFTopic *> *)findTopicsWithTag:(NSString *)tag orderBy:(NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSUInteger)page pageCount:(NSUInteger)pageCount error:(NSError **)error {
+    return [UFPFService findTopicWithCategory:nil tag:tag fromUser:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // 3 根据fromUser查询，一般用来展示某个用户的内容
-+ (NSArray<UFPFTopic *> *)findTopicsCreatedByUser:(PFUser *)fromUser orderBy:(NSString *)orderBy page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
-    return [UFPFService findTopicWithCategory:nil tag:nil fromUser:fromUser orderBy:orderBy page:page pageCount:pageCount error:error];
++ (NSArray<UFPFTopic *> *)findTopicsCreatedByUser:(PFUser *)fromUser orderBy:(NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
+    return [UFPFService findTopicWithCategory:nil tag:nil fromUser:fromUser orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // 4 根据关注，一般用来展示用户关注的内容
-+ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(PFUser *)fromUser orderBy:(NSString *)orderBy page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
++ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(PFUser *)fromUser orderBy:(NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
     
     // 查询公开的Topic
     PFQuery *query = [PFQuery queryWithClassName:UFPFTopicKeyClass];
@@ -52,7 +52,7 @@
     // 添加条件，Topic的创建者 = fromUser关注的用户
     [query whereKey:UFPFTopicKeyFromUser matchesKey:UFPFFollowKeyToUser inQuery:followQuery];
     
-    return [UFPFService _excuteTopicQuery:query orderBy:orderBy page:page pageCount:pageCount error:error];
+    return [UFPFService _excuteTopicQuery:query orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 + (UFPFTopic *)addTopicWithIsLocked:(BOOL)isLocked
@@ -176,6 +176,7 @@
                                            tag:(NSString * _Nullable)tag
                                       fromUser:(PFUser * _Nullable)fromUser
                                        orderBy:(NSString *)orderBy
+                             isOrderByAscending:(BOOL)isOrderByAscending
                                           page:(NSUInteger)page
                                      pageCount:(NSUInteger)pageCount
                                          error:(NSError **)error
@@ -225,12 +226,17 @@
     }
     
     // 执行Query
-    return [UFPFService _excuteTopicQuery:query orderBy:orderBy page:page pageCount:pageCount error:error];
+    return [UFPFService _excuteTopicQuery:query orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
-+ (NSArray *)_excuteTopicQuery:(PFQuery *)query orderBy:(nonnull NSString *)orderBy page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
-    [query orderByDescending:orderBy];
++ (NSArray *)_excuteTopicQuery:(PFQuery *)query orderBy:(nonnull NSString *)orderBy isOrderByAscending:(BOOL)isOrderByAscending page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
     
+    if (isOrderByAscending) {
+        [query orderByAscending:orderBy];
+    } else {
+        [query orderByDescending:orderBy];
+    }
+        
     [query setSkip:pageCount * page];
     [query setLimit:pageCount];
     

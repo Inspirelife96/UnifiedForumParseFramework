@@ -19,52 +19,57 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 0 无条件，直接查询Topic表，根据orderBy进行排序，例如查询热门的Topic。
 + (NSArray<UFPFTopic *> *)findTopicsOrderBy:(NSString *)orderBy
-                                      page:(NSUInteger)page
-                                 pageCount:(NSUInteger)pageCount
-                                     error:(NSError **)error;
+                         isOrderByAscending:(BOOL)isOrderByAscending
+                                       page:(NSUInteger)page
+                                  pageCount:(NSUInteger)pageCount
+                                      error:(NSError **)error;
 
 // 1 根据Category查询，一般用来展示某个板块的内容
 + (NSArray<UFPFTopic *> *)findTopicsWithCategory:(NSString *)category
-                                        orderBy:(NSString *)orderBy
-                                           page:(NSUInteger)page
-                                      pageCount:(NSUInteger)pageCount
-                                          error:(NSError **)error;
+                                         orderBy:(NSString *)orderBy
+                              isOrderByAscending:(BOOL)isOrderByAscending
+                                            page:(NSUInteger)page
+                                       pageCount:(NSUInteger)pageCount
+                                           error:(NSError **)error;
 
 // 2 根据Tag查询，一般用来展示某个标签的内容
 + (NSArray<UFPFTopic *> *)findTopicsWithTag:(NSString *)tag
-                                   orderBy:(NSString *)orderBy
-                                      page:(NSUInteger)page
-                                 pageCount:(NSUInteger)pageCount
-                                     error:(NSError **)error;
+                                    orderBy:(NSString *)orderBy
+                         isOrderByAscending:(BOOL)isOrderByAscending
+                                       page:(NSUInteger)page
+                                  pageCount:(NSUInteger)pageCount
+                                      error:(NSError **)error;
 
 // 3 根据fromUser查询，一般用来展示某个用户的内容
 + (NSArray<UFPFTopic *> *)findTopicsCreatedByUser:(PFUser *)fromUser
-                                         orderBy:(NSString *)orderBy
-                                            page:(NSInteger)page
-                                       pageCount:(NSInteger)pageCount
-                                           error:(NSError **)error;
-
-// 4 根据关注，一般用来展示用户关注的内容
-+ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(PFUser *)fromUser
                                           orderBy:(NSString *)orderBy
+                               isOrderByAscending:(BOOL)isOrderByAscending
                                              page:(NSInteger)page
                                         pageCount:(NSInteger)pageCount
                                             error:(NSError **)error;
 
+// 4 根据关注，一般用来展示用户关注的内容
++ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(PFUser *)fromUser
+                                           orderBy:(NSString *)orderBy
+                                isOrderByAscending:(BOOL)isOrderByAscending
+                                              page:(NSInteger)page
+                                         pageCount:(NSInteger)pageCount
+                                             error:(NSError **)error;
+
 // 添加
 + (UFPFTopic *)addTopicWithIsLocked:(BOOL)isLocked
-                         isDeleted:(BOOL)isDeleted
-                         isPrivate:(BOOL)isPrivate
-                        isApproved:(BOOL)isApproved
-                         isPopular:(BOOL)isPopular
-                             title:(NSString *)title
-                           content:(NSString *)content
-                  mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
-                     mediaFileType:(NSString *)mediaFileType
-                          fromUser:(PFUser *)fromUser
-                          category:(NSString * _Nullable)category
-                              tags:(NSArray<NSString *> * _Nullable)tags
-                             error:(NSError **)error;
+                          isDeleted:(BOOL)isDeleted
+                          isPrivate:(BOOL)isPrivate
+                         isApproved:(BOOL)isApproved
+                          isPopular:(BOOL)isPopular
+                              title:(NSString *)title
+                            content:(NSString *)content
+                   mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
+                      mediaFileType:(NSString *)mediaFileType
+                           fromUser:(PFUser *)fromUser
+                           category:(NSString * _Nullable)category
+                               tags:(NSArray<NSString *> * _Nullable)tags
+                              error:(NSError **)error;
 
 // 更新
 

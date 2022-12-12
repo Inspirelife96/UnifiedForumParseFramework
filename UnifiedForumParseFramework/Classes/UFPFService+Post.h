@@ -19,18 +19,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 // - 查询某一个Topic的回帖
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                  orderBy:(NSString *)orderBy
-                                     page:(NSInteger)page
-                                pageCount:(NSInteger)pageCount
-                                    error:(NSError **)error;
+                                   orderBy:(NSString *)orderBy
+                        isOrderByAscending:(BOOL)isOrderByAscending
+                                      page:(NSInteger)page
+                                 pageCount:(NSInteger)pageCount
+                                     error:(NSError **)error;
 
 // - 查询某一个Topic下某个人的所有回贴 - 例如：即只看楼主的功能
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                 fromUser:(PFUser *)fromUser
-                                  orderBy:(NSString *)orderBy
-                                     page:(NSInteger)page
-                                pageCount:(NSInteger)pageCount
-                                    error:(NSError **)error;
+                                  fromUser:(PFUser *)fromUser
+                                   orderBy:(NSString *)orderBy
+                        isOrderByAscending:(BOOL)isOrderByAscending
+                                      page:(NSInteger)page
+                                 pageCount:(NSInteger)pageCount
+                                     error:(NSError **)error;
 
 // Post表添加
 + (UFPFPost *)addPostWithIsApproved:(BOOL)isApproved

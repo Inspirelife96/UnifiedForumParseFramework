@@ -21,29 +21,32 @@
 @implementation UFPFService (Post)
 
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                  orderBy:(NSString *)orderBy
-                                     page:(NSInteger)page
-                                pageCount:(NSInteger)pageCount
-                                    error:(NSError **)error
+                                   orderBy:(NSString *)orderBy
+                        isOrderByAscending:(BOOL)isOrderByAscending
+                                      page:(NSInteger)page
+                                 pageCount:(NSInteger)pageCount
+                                     error:(NSError **)error
 {
-    return [UFPFService findPostsToTopic:toTopic fromUser:nil category:nil orderBy:orderBy page:page pageCount:pageCount error:error];
+    return [UFPFService findPostsToTopic:toTopic fromUser:nil category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // - 查询某一个Topic下某个人的所有回贴 - 例如：即只看楼主的功能
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                 fromUser:(PFUser *)fromUser
-                                  orderBy:(NSString *)orderBy
-                                     page:(NSInteger)page
-                                pageCount:(NSInteger)pageCount
-                                    error:(NSError **)error
+                                  fromUser:(PFUser *)fromUser
+                                   orderBy:(NSString *)orderBy
+                        isOrderByAscending:(BOOL)isOrderByAscending
+                                      page:(NSInteger)page
+                                 pageCount:(NSInteger)pageCount
+                                     error:(NSError **)error
 {
-    return [UFPFService findPostsToTopic:toTopic fromUser:fromUser category:nil orderBy:orderBy page:page pageCount:pageCount error:error];
+    return [UFPFService findPostsToTopic:toTopic fromUser:fromUser category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 + (NSArray *)findPostsToTopic:(UFPFTopic * _Nullable)toTopic
                      fromUser:(PFUser * _Nullable)fromUser
                      category:(UFPFCategory * _Nullable)category
                       orderBy:(NSString *)orderBy
+           isOrderByAscending:(BOOL)isOrderByAscending
                          page:(NSInteger)page
                     pageCount:(NSInteger)pageCount
                         error:(NSError **)error
@@ -85,7 +88,11 @@
         [query whereKey:UFPFPostKeyToTopic matchesQuery:innerQuery];
     }
     
-    [query orderByDescending:orderBy];
+    if (isOrderByAscending) {
+        [query orderByAscending:orderBy];
+    } else {
+        [query orderByDescending:orderBy];
+    }
     
     [query setSkip:pageCount * page];
     [query setLimit:pageCount];

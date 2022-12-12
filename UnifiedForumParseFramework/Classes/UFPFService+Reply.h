@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray <UFPFReply *> *)findRepliesToPost:(UFPFPost *)toPost
                                     orderBy:(NSString *)orderBy
+                          isOrderByAscending:(BOOL)isOrderByAscending
                                        page:(NSInteger)page
                                   pageCount:(NSInteger)pageCount
                                       error:(NSError **)error;

@@ -20,6 +20,7 @@
 
 + (NSArray <UFPFReply *> *)findRepliesToPost:(UFPFPost *)toPost
                                     orderBy:(NSString *)orderBy
+                          isOrderByAscending:(BOOL)isOrderByAscending
                                        page:(NSInteger)page
                                   pageCount:(NSInteger)pageCount
                                       error:(NSError **)error
@@ -46,7 +47,11 @@
     
     [query whereKey:UFPFReplyKeyToPost equalTo:toPost];
     
-    [query orderByDescending:orderBy];
+    if (isOrderByAscending) {
+        [query orderByAscending:orderBy];
+    } else {
+        [query orderByDescending:orderBy];
+    }
     
     [query setSkip:pageCount * page];
     [query setLimit:pageCount];

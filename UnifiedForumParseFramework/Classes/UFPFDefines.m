@@ -17,7 +17,7 @@ NSString *const UFPFTimeLineTypeReportTopic = @"Report Topic";
 NSString *const UFPFTimeLineTypeReportPost = @"Report Post";
 NSString *const UFPFTimeLineTypeReportReply = @"Report Reply";
 NSString *const UFPFTimeLineTypeFollow = @"Follow";
-NSString *const UFPFTimeLineTypeUnfollow = @"Unfollow";
+//NSString *const UFPFTimeLineTypeUnfollow = @"Unfollow";
 
 NSString *const UFPFNotificationTypeComment = @"Comment";
 NSString *const UFPFNotificationTypeLike = @"Like";
@@ -315,12 +315,10 @@ NSString *const UFPFTimeLineKeyClass = @"TimeLine";
 NSString *const UFPFTimeLineKeyFromUser = @"fromUser"; // 消息发送者
 NSString *const UFPFTimeLineKeyToUser = @"toUser"; // 消息接受者
 NSString *const UFPFTimeLineKeyType = @"type";
+NSString *const UFPFTimeLineKeyTopic = @"topic";
 NSString *const UFPFTimeLineKeyPost = @"post";
 NSString *const UFPFTimeLineKeyReply = @"reply";
-NSString *const UFPFTimeLineKeyLikeTopic = @"likeTopic";
-NSString *const UFPFTimeLineKeyLikePost = @"likePost";
-NSString *const UFPFTimeLineKeyLikeReply = @"likeReply";
-NSString *const UFPFTimeLineKeyFollow = @"follow";
+NSString *const UFPFTimeLineKeyIsDeleted = @"isDeleted";
 
 
 # pragma mark - StatisticsInfos 表

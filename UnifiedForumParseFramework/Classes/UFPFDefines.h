@@ -64,7 +64,7 @@ extern NSString *const UFPFTimeLineTypeLikeTopic;
 extern NSString *const UFPFTimeLineTypeLikePost;
 extern NSString *const UFPFTimeLineTypeLikeReply;
 extern NSString *const UFPFTimeLineTypeFollow;
-extern NSString *const UFPFTimeLineTypeUnfollow;
+//extern NSString *const UFPFTimeLineTypeUnfollow;
 
 extern NSString *const UFPFNotificationTypeComment;
 extern NSString *const UFPFNotificationTypeLike;
@@ -356,9 +356,9 @@ extern NSString *const UFPFBlockKeyFromUser; // 发起者
 extern NSString *const UFPFBlockKeyToUser; // 黑名单用户
 
 
-# pragma mark - Notifications 表
+# pragma mark - TimeLine 表
 
-// Notifications 表 该表每存入一条记录（后台就会发送一条推送给消息接受者）
+// Timeline 表
 
 // Class key
 extern NSString *const UFPFTimeLineKeyClass;
@@ -366,13 +366,10 @@ extern NSString *const UFPFTimeLineKeyClass;
 extern NSString *const UFPFTimeLineKeyFromUser; // 消息发送者
 extern NSString *const UFPFTimeLineKeyToUser; // 消息接受者
 extern NSString *const UFPFTimeLineKeyType;
+extern NSString *const UFPFTimeLineKeyTopic;
 extern NSString *const UFPFTimeLineKeyPost;
 extern NSString *const UFPFTimeLineKeyReply;
-extern NSString *const UFPFTimeLineKeyLikeTopic;
-extern NSString *const UFPFTimeLineKeyLikePost;
-extern NSString *const UFPFTimeLineKeyLikeReply;
-extern NSString *const UFPFTimeLineKeyFollow;
-
+extern NSString *const UFPFTimeLineKeyIsDeleted;
 
 # pragma mark - StatisticsInfos 表
 

@@ -22,7 +22,7 @@
 @dynamic content;
 @dynamic mediaFileObjects;
 @dynamic mediaFileType;
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic postCount;
 @dynamic likeCount;
 @dynamic shareCount;

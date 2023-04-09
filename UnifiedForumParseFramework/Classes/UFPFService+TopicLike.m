@@ -13,7 +13,7 @@
 #import "UFPFTopicLike.h"
 
 #import "UFPFService+Notification.h"
-#import "UFPFService+User.h"
+#import "UFPFService+UserProfile.h"
 #import "UFPFService+Block.h"
 
 @implementation UFPFService (TopicLike)
@@ -26,21 +26,22 @@
     [query whereKey:UFPFTopicKeyIsDeleted equalTo:@(NO)];
     [query whereKey:UFPFTopicLikeKeyToTopic equalTo:toTopic];
 
-    // 去除fromUser是注销用户
-    PFQuery *deletedUserQuery = [UFPFService buildUserQueryWhereUserIsDeleted];
-    [query whereKey:UFPFTopicLikeKeyFromUser doesNotMatchQuery:deletedUserQuery];
+    // 去除fromUserProfile是注销用户
+    PFQuery *deletedUserQuery = [UFPFService buildUserProfileQueryWhereUserIsDeleted];
+    [query whereKey:UFPFTopicLikeKeyFromUserProfile doesNotMatchQuery:deletedUserQuery];
     
-    // 去除fromUser是禁止用户
-    PFQuery *lockedUserQuery = [UFPFService buildUserQueryWhereUserIsLocked];
-    [query whereKey:UFPFTopicLikeKeyFromUser doesNotMatchQuery:lockedUserQuery];
+    // 去除fromUserProfile是禁止用户
+    PFQuery *lockedUserQuery = [UFPFService buildUserProfileQueryWhereUserIsLocked];
+    [query whereKey:UFPFTopicLikeKeyFromUserProfile doesNotMatchQuery:lockedUserQuery];
 
     // 如果是登录用户，屏蔽黑名单
     if ([PFUser currentUser]) {
-        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserIs:[PFUser currentUser]];
-        [query whereKey:UFPFTopicLikeKeyFromUser doesNotMatchKey:UFPFBlockKeyToUser inQuery:blockQuery];
+        UFPFUserProfile *currentUserProfile = [[PFUser currentUser] objectForKey:UFPFUserKeyUserProfile];
+        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:currentUserProfile];
+        [query whereKey:UFPFTopicLikeKeyFromUserProfile doesNotMatchKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     }
     
-    [query includeKey:UFPFTopicLikeKeyFromUser];
+    [query includeKey:UFPFTopicLikeKeyFromUserProfile];
     [query includeKey:UFPFTopicLikeKeyToTopic];
         
     [query orderByDescending:UFPFKeyCreatedAt];
@@ -57,8 +58,8 @@
         
         [topicLikes enumerateObjectsUsingBlock:^(UFPFTopicLike *  _Nonnull topicLike, NSUInteger idx, BOOL * _Nonnull stop) {
             if (topicLike.isDeleted == NO) {
-                PFUser *user = topicLike.fromUser;
-                [userMutableArray addObject:user];
+                UFPFUserProfile *userProfile = topicLike.fromUserProfile;
+                [userMutableArray addObject:userProfile];
             }
         }];
         
@@ -67,11 +68,11 @@
 }
 
 // 查找用户喜欢的Topic
-+ (NSArray<UFPFTopic *> *)findTopicsLikedByUser:(PFUser *)fromUser page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
++ (NSArray<UFPFTopic *> *)findTopicsLikedByUser:(UFPFUserProfile *)fromUserProfile page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFTopicLikeKeyClass];
     
     [query whereKey:UFPFTopicKeyIsDeleted equalTo:@(NO)];
-    [query whereKey:UFPFTopicLikeKeyFromUser equalTo:fromUser];
+    [query whereKey:UFPFTopicLikeKeyFromUserProfile equalTo:fromUserProfile];
     
     // 理论上，我们需要继续对toTopic进行筛选，剔除那些无效的toTopic，例如：
     // - Topic本身被作者删除了，被作者隐藏了，被管理员禁了。
@@ -88,7 +89,7 @@
     
     // 基于上述原因，我们不再对toTopic进行筛选
         
-    [query includeKey:UFPFTopicLikeKeyFromUser];
+    [query includeKey:UFPFTopicLikeKeyFromUserProfile];
     [query includeKey:UFPFTopicLikeKeyToTopic];
         
     [query orderByDescending:UFPFKeyCreatedAt];
@@ -114,8 +115,8 @@
     }
 }
 
-+ (BOOL)isTopic:(UFPFTopic *)topic likedbyUser:(PFUser *)user error:(NSError **)error {
-    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUser:user toTopic:topic isDeleted:NO error:error];
++ (BOOL)isTopic:(UFPFTopic *)topic likedbyUserProfile:(UFPFUserProfile *)userProfile error:(NSError **)error {
+    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUserProfile:userProfile toTopic:topic isDeleted:NO error:error];
 
     if (*error) {
         return NO;
@@ -129,8 +130,8 @@
 }
 
 // 添加
-+ (UFPFTopicLike *)addTopicLikeWithFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic error:(NSError **)error {
-    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUser:fromUser toTopic:toTopic isDeleted:NO error:error];
++ (UFPFTopicLike *)addTopicLikeWithFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic error:(NSError **)error {
+    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUserProfile:fromUserProfile toTopic:toTopic isDeleted:NO error:error];
     
     if (*error) {
         return nil;
@@ -140,7 +141,7 @@
         }
     }
     
-    topicLikes = [UFPFService _findTopicLikeFromUser:fromUser toTopic:toTopic isDeleted:YES error:error];
+    topicLikes = [UFPFService _findTopicLikeFromUserProfile:fromUserProfile toTopic:toTopic isDeleted:YES error:error];
 
     if (*error) {
         return nil;
@@ -156,7 +157,7 @@
     }
     
     UFPFTopicLike *topicLike = [[UFPFTopicLike alloc] init];
-    topicLike.fromUser = fromUser;
+    topicLike.fromUserProfile = fromUserProfile;
     topicLike.toTopic = toTopic;
     topicLike.isDeleted = NO;
     
@@ -165,9 +166,9 @@
     if (succeeded) {
         // 首次喜欢，向消息表中添加一条记录
         // 该操作不管是否成功，不会影响addTopicLike的操作，因此操作执行后，返回YES。
-        NSError *notificationError = nil;
-        [UFPFService addNotificationFromUser:fromUser toUser:toTopic.fromUser type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikeTopic topic:toTopic post:nil reply:nil messageGroup:nil error:&notificationError];
-        
+//        NSError *notificationError = nil;
+//        [UFPFService addNotificationFromUserProfile:fromUserProfile toUser:toTopic.fromUserProfile type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikeTopic topic:toTopic post:nil reply:nil messageGroup:nil error:&notificationError];
+//        
         return topicLike;
     } else {
         return nil;
@@ -180,8 +181,8 @@
 }
 
 // 逻辑删除
-+ (BOOL)deleteTopicLikeFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic error:(NSError **)error {
-    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUser:fromUser toTopic:toTopic isDeleted:NO error:error];
++ (BOOL)deleteTopicLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic error:(NSError **)error {
+    NSArray<UFPFTopicLike *> *topicLikes = [UFPFService _findTopicLikeFromUserProfile:fromUserProfile toTopic:toTopic isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -203,9 +204,9 @@
     }
 }
 
-+ (NSArray<UFPFTopicLike *> *)_findTopicLikeFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic isDeleted:(BOOL)isDeleted error:(NSError **)error {
++ (NSArray<UFPFTopicLike *> *)_findTopicLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic isDeleted:(BOOL)isDeleted error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFTopicLikeKeyClass];
-    [query whereKey:UFPFTopicLikeKeyFromUser equalTo:fromUser];
+    [query whereKey:UFPFTopicLikeKeyFromUserProfile equalTo:fromUserProfile];
     [query whereKey:UFPFTopicLikeKeyToTopic equalTo:toTopic];
     [query whereKey:UFPFTopicLikeKeyIsDeleted equalTo:@(isDeleted)];
     return [query findObjects:error];

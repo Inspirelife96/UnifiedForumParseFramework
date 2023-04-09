@@ -9,6 +9,8 @@
 
 #import "UFPFDefines.h"
 
+@class UFPFUserProfile;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFReply;
@@ -16,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFService (ReplyReport)
 
-+ (UFPFReplyReport *)addReplyReportFromUser:(PFUser *)fromUser toReply:(UFPFReply *)toReply forReason:(UFPFParseReportReason)reason error:(NSError **)error;
++ (UFPFReplyReport *)addReplyReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toReply:(UFPFReply *)toReply forReason:(UFPFParseReportReason)reason error:(NSError **)error;
 
 @end
 

@@ -11,7 +11,7 @@
 
 @implementation UFPFPostLike
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toPost;
 @dynamic isDeleted;
 

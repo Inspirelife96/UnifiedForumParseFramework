@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFTopic;
 @class UFPFReply;
+@class UFPFUserProfile;
 
 @interface UFPFPost : PFObject <PFSubclassing>
 
@@ -29,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber *likeCount;
 
 // 关系
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFTopic *toTopic;
 
 @end

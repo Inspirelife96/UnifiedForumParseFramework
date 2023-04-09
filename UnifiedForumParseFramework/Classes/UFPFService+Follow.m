@@ -11,37 +11,36 @@
 
 #import "UFPFFollow.h"
 
-#import "UFPFService+Notification.h"
-#import "UFPFService+User.h"
 #import "UFPFService+Block.h"
+#import "UFPFService+UserProfile.h"
 
-typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
-    UFPFUserRelationTypeFollow,
-    UFPFUserRelationTypeFollowed
+typedef NS_ENUM(NSInteger, UFPFFollowType) {
+    UFPFFollowTypeFollower, // 粉丝
+    UFPFFollowTypeFollowing // 关注
 };
 
 @implementation UFPFService (Follow)
 
 // 查找user的粉丝
-+ (NSArray <PFUser *> *)findFollower:(PFUser *)user
++ (NSArray<UFPFUserProfile *> *)findFollower:(UFPFUserProfile *)userProfile
                                 page:(NSInteger)page
                            pageCount:(NSInteger)pageCount
                                error:(NSError **)error {
-    return [UFPFService _findUserRelationShip:UFPFUserRelationTypeFollowed forUser:user page:page pageCount:pageCount error:error];
+    return [UFPFService _findFollowForUserProfile:userProfile followType:UFPFFollowTypeFollower page:page pageCount:pageCount error:error];
 }
 
 // 查找user的关注
-+ (NSArray <PFUser *> *)findFollowing:(PFUser *)user
++ (NSArray<UFPFUserProfile *> *)findFollowing:(UFPFUserProfile *)userProfile
                                  page:(NSInteger)page
                             pageCount:(NSInteger)pageCount
                                 error:(NSError **)error {
-    return [UFPFService _findUserRelationShip:UFPFUserRelationTypeFollow forUser:user page:page pageCount:pageCount error:error];
+    return [UFPFService _findFollowForUserProfile:userProfile followType:UFPFFollowTypeFollowing page:page pageCount:pageCount error:error];
 }
 
 // Follow表添加
-+ (UFPFFollow *)addFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error {
++ (UFPFFollow *)addFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error {
     // 查询Follow表内是否存在记录
-    NSArray<UFPFFollow *> *followArray = [UFPFService _findFollowFromUser:fromUser toUser:toUser isDeleted:NO error:error];
+    NSArray<UFPFFollow *> *followArray = [UFPFService _findFollowFromUserProfile:fromUserProfile toUserProfile:toUserProfile isDeleted:NO error:error];
     
     if (*error) {
         return nil;
@@ -53,8 +52,8 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
     }
     
     // 查找Follow表内是否存在记录但标记isDeleted=YES
-    followArray = [UFPFService _findFollowFromUser:fromUser toUser:toUser isDeleted:YES error:error];
-
+    followArray = [UFPFService _findFollowFromUserProfile:fromUserProfile toUserProfile:toUserProfile isDeleted:YES error:error];
+    
     if (*error) {
         return nil;
     } else {
@@ -69,21 +68,21 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
     }
     
     UFPFFollow *follow = [[UFPFFollow alloc] init];
-    follow.fromUser = fromUser;
-    follow.toUser = toUser;
+    follow.fromUserProfile = fromUserProfile;
+    follow.toUserProfile = toUserProfile;
     follow.isDeleted = NO;
     BOOL succeeded = [follow save:error];
     if (succeeded) {
-        // 首次关注，向消息表中添加一条记录
-        [UFPFService addNotificationFromUser:fromUser toUser:toUser type:UFPFNotificationTypeFollow subType:UFPFNotificationSubTypeNone topic:nil post:nil reply:nil messageGroup:nil error:error];
+        // 首次关注，向消息表中添加一条记录 todo:这个交由服务器去处理
+//        [UFPFService addNotificationFromUserProfile:fromUserProfile toUserProfile:toUserProfile type:UFPFNotificationTypeFollow subType:UFPFNotificationSubTypeNone topic:nil post:nil reply:nil messageGroup:nil error:error];
         return follow;
     } else {
         return nil;
     }
 }
 
-+ (BOOL)isFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error {
-    NSArray *followArray = [UFPFService _findFollowFromUser:fromUser toUser:toUser isDeleted:NO error:error];
++ (BOOL)isFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error {
+    NSArray *followArray = [UFPFService _findFollowFromUserProfile:fromUserProfile toUserProfile:toUserProfile isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -103,8 +102,8 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
 }
 
 // 逻辑删除
-+ (BOOL)deleteFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error {
-    NSArray *followArray = [UFPFService _findFollowFromUser:fromUser toUser:toUser isDeleted:NO error:error];
++ (BOOL)deleteFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error {
+    NSArray *followArray = [UFPFService _findFollowFromUserProfile:fromUserProfile toUserProfile:toUserProfile isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -128,10 +127,10 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
 
 #pragma mark Private Methods
 
-+ (NSArray *)_findFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser isDeleted:(BOOL)isDeleted error:(NSError **)error {
++ (NSArray *)_findFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile isDeleted:(BOOL)isDeleted error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFFollowKeyClass];
-    [query whereKey:UFPFFollowKeyFromUser equalTo:fromUser];
-    [query whereKey:UFPFFollowKeyToUser equalTo:toUser];
+    [query whereKey:UFPFFollowKeyFromUserProfile equalTo:fromUserProfile];
+    [query whereKey:UFPFFollowKeyToUserProfile equalTo:toUserProfile];
     [query whereKey:UFPFFollowKeyIsDeleted equalTo:@(isDeleted)];
     
     return [query findObjects:error];
@@ -143,39 +142,45 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
 }
 
 // 查找user的关注
-+ (NSArray <PFUser *> *)_findUserRelationShip:(UFPFUserRelationType)type
-                                      forUser:(PFUser *)user
-                                         page:(NSInteger)page
-                                    pageCount:(NSInteger)pageCount
-                                        error:(NSError **)error {
++ (NSArray<UFPFUserProfile *> *)_findFollowForUserProfile:(UFPFUserProfile *)userProfile
+                                       followType:(UFPFFollowType)followType
+                                             page:(NSInteger)page
+                                        pageCount:(NSInteger)pageCount
+                                            error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFFollowKeyClass];
     
     // 删除标记必须为NO
     [query whereKey:UFPFFollowKeyIsDeleted equalTo:@(NO)];
     
-    NSString *conditionKey = UFPFFollowKeyFromUser;
-    NSString *tagetKey = UFPFFollowKeyToUser;
+    NSString *conditionKey = @"";
+    NSString *tagetKey = @"";
     
-    if (type == UFPFUserRelationTypeFollowed) {
-        conditionKey = UFPFFollowKeyToUser;
-        tagetKey = UFPFFollowKeyFromUser;
+    if (followType == UFPFFollowTypeFollower) {
+        // 查找用户userProfile的粉丝，那么应该是UFPFFollowKeyToUserProfile = userProfile
+        conditionKey = UFPFFollowKeyToUserProfile;
+        tagetKey = UFPFFollowKeyFromUserProfile;
+    } else {
+        // 查找用户userProfile的关注，那么应该是UFPFFollowKeyFromUserProfile = userProfile
+        conditionKey = UFPFFollowKeyFromUserProfile;
+        tagetKey = UFPFFollowKeyToUserProfile;
     }
     
     // 根据查找的关系类型，设定条件
-    [query whereKey:conditionKey equalTo:user];
+    [query whereKey:conditionKey equalTo:userProfile];
     
     // 返回的列表的用户，不能为注销的用户
-    PFQuery *deletedUserQuery = [UFPFService buildUserQueryWhereUserIsDeleted];
+    PFQuery *deletedUserQuery = [UFPFService buildUserProfileQueryWhereUserIsDeleted];
     [query whereKey:tagetKey doesNotMatchQuery:deletedUserQuery];
     
     // 不能为锁定用户
-    PFQuery *lockedUserQuery = [UFPFService buildUserQueryWhereUserIsLocked];
+    PFQuery *lockedUserQuery = [UFPFService buildUserProfileQueryWhereUserIsLocked];
     [query whereKey:tagetKey doesNotMatchQuery:lockedUserQuery];
     
     // 如果是登录用户，返回的用户不能在登录用户黑名单中
     if ([PFUser currentUser]) {
-        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserIs:[PFUser currentUser]];
-        [query whereKey:tagetKey doesNotMatchKey:UFPFBlockKeyToUser inQuery:blockQuery];
+        UFPFUserProfile *currentUserProfile = [[PFUser currentUser] objectForKey:UFPFUserKeyUserProfile];
+        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:currentUserProfile];
+        [query whereKey:tagetKey doesNotMatchKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     }
     
     [query includeKey:tagetKey];
@@ -194,8 +199,8 @@ typedef NS_ENUM(NSInteger, UFPFUserRelationType) {
         NSMutableArray *userMutableArray = [[NSMutableArray alloc] init];
         
         [followArray enumerateObjectsUsingBlock:^(UFPFFollow *  _Nonnull follow, NSUInteger idx, BOOL * _Nonnull stop) {
-            PFUser *user = [follow objectForKey:tagetKey];
-            [userMutableArray addObject:user];
+            UFPFUserProfile *userProfile = [follow objectForKey:tagetKey];
+            [userMutableArray addObject:userProfile];
         }];
         
         return [userMutableArray copy];

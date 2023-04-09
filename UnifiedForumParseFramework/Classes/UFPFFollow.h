@@ -7,12 +7,14 @@
 
 #import <Parse/Parse.h>
 
+@class UFPFUserProfile;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFFollow : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
-@property (nonatomic, strong) PFUser *toUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
+@property (nonatomic, strong) UFPFUserProfile *toUserProfile;
 @property (nonatomic, assign) BOOL isDeleted;
 
 @end

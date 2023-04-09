@@ -18,8 +18,8 @@
 @implementation UFPFService (ReplyLike)
 
 // 判断用户是否喜欢这个Reply
-+ (BOOL)isReply:(UFPFReply *)reply likedbyUser:(PFUser *)user error:(NSError **)error {
-    NSArray<UFPFReplyLike *> *replyLikes = [UFPFService _findReplyLikeFromUser:user toReply:reply isDeleted:NO error:error];
++ (BOOL)isReply:(UFPFReply *)reply likedbyUserProfile:(UFPFUserProfile *)userProfile error:(NSError **)error {
+    NSArray<UFPFReplyLike *> *replyLikes = [UFPFService _findReplyLikeFromUserProfile:userProfile toReply:reply isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -33,9 +33,9 @@
 }
 
 // 添加
-+ (UFPFReplyLike *)addReplyLikeWithFromUser:(PFUser *)fromUser toReply:(UFPFReply *)toReply error:(NSError **)error {
++ (UFPFReplyLike *)addReplyLikeWithFromUserProfile:(UFPFUserProfile *)fromUserProfile toReply:(UFPFReply *)toReply error:(NSError **)error {
     // ReplyLike是否已经存在
-    NSArray<UFPFReplyLike *> *replyLikes =  [UFPFService _findReplyLikeFromUser:fromUser toReply:toReply isDeleted:NO error:error];
+    NSArray<UFPFReplyLike *> *replyLikes =  [UFPFService _findReplyLikeFromUserProfile:fromUserProfile toReply:toReply isDeleted:NO error:error];
     if (*error) {
         return nil;
     } else {
@@ -45,7 +45,7 @@
     }
     
     // 存在相应的记录但isDeleted标记为是YES，此时修正为NO即可
-    replyLikes =  [UFPFService _findReplyLikeFromUser:fromUser toReply:toReply isDeleted:YES error:error];
+    replyLikes =  [UFPFService _findReplyLikeFromUserProfile:fromUserProfile toReply:toReply isDeleted:YES error:error];
     if (*error) {
         return nil;
     } else {
@@ -61,7 +61,7 @@
     
     // 不存在记录，那么添加一条新的
     UFPFReplyLike *replyLike = [[UFPFReplyLike alloc] init];
-    replyLike.fromUser = fromUser;
+    replyLike.fromUserProfile = fromUserProfile;
     replyLike.toReply = toReply;
     replyLike.isDeleted = NO;
     
@@ -69,8 +69,8 @@
     
     if (succeeded) {
         // 首次喜欢，向消息表中添加一条记录
-        NSError *notificationError = nil;
-        [UFPFService addNotificationFromUser:fromUser toUser:toReply.fromUser type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikeReply topic:nil post:nil reply:toReply messageGroup:nil error:&notificationError];
+//        NSError *notificationError = nil;
+//        [UFPFService addNotificationFromUserProfile:fromUserProfile toUser:toReply.fromUserProfile type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikeReply topic:nil post:nil reply:toReply messageGroup:nil error:&notificationError];
         return replyLike;
     } else {
         return nil;
@@ -82,8 +82,8 @@
     return [UFPFService _updateReplyLike:replyLike isDeleted:YES error:error];
 }
 
-+ (BOOL)deleteReplyLikeFromUser:(PFUser *)fromUser toReply:(UFPFReply *)toReply error:(NSError **)error {
-    NSArray<UFPFReplyLike *> *replyLikes =  [UFPFService _findReplyLikeFromUser:fromUser toReply:toReply isDeleted:NO error:error];
++ (BOOL)deleteReplyLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toReply:(UFPFReply *)toReply error:(NSError **)error {
+    NSArray<UFPFReplyLike *> *replyLikes =  [UFPFService _findReplyLikeFromUserProfile:fromUserProfile toReply:toReply isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -105,9 +105,9 @@
     }
 }
 
-+ (NSArray<UFPFReplyLike *> *)_findReplyLikeFromUser:(PFUser *)fromUser toReply:(UFPFReply *)toReply isDeleted:(BOOL)isDeleted error:(NSError **)error {
++ (NSArray<UFPFReplyLike *> *)_findReplyLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toReply:(UFPFReply *)toReply isDeleted:(BOOL)isDeleted error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFReplyLikeKeyClass];
-    [query whereKey:UFPFReplyLikeKeyFromUser equalTo:fromUser];
+    [query whereKey:UFPFReplyLikeKeyFromUserProfile equalTo:fromUserProfile];
     [query whereKey:UFPFReplyLikeKeyToReply equalTo:toReply];
     [query whereKey:UFPFReplyLikeKeyIsDeleted equalTo:@(isDeleted)];
     return [query findObjects:error];

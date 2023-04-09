@@ -10,6 +10,7 @@
 @class UFPFTopic;
 @class UFPFCategory;
 @class UFPFTag;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,8 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
                                   pageCount:(NSUInteger)pageCount
                                       error:(NSError **)error;
 
-// 3 根据fromUser查询，一般用来展示某个用户的内容
-+ (NSArray<UFPFTopic *> *)findTopicsCreatedByUser:(PFUser *)fromUser
+// 3 根据fromUserProfile查询，一般用来展示某个用户的内容
++ (NSArray<UFPFTopic *> *)findTopicsCreatedByUser:(UFPFUserProfile *)fromUserProfile
                                           orderBy:(NSString *)orderBy
                                isOrderByAscending:(BOOL)isOrderByAscending
                                              page:(NSInteger)page
@@ -49,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
                                             error:(NSError **)error;
 
 // 4 根据关注，一般用来展示用户关注的内容
-+ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(PFUser *)fromUser
++ (NSArray<UFPFTopic *> *)findTopicsFollowedByUser:(UFPFUserProfile *)fromUserProfile
                                            orderBy:(NSString *)orderBy
                                 isOrderByAscending:(BOOL)isOrderByAscending
                                               page:(NSInteger)page
@@ -66,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
                             content:(NSString *)content
                    mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
                       mediaFileType:(NSString *)mediaFileType
-                           fromUser:(PFUser *)fromUser
+                           fromUserProfile:(UFPFUserProfile *)fromUserProfile
                            category:(NSString * _Nullable)category
                                tags:(NSArray<NSString *> * _Nullable)tags
                               error:(NSError **)error;
@@ -100,11 +101,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 // 辅助
-+ (PFQuery *)buildTopicQueryWhereFromUserIsBlockedByUser:(PFUser *)user;
++ (PFQuery *)buildTopicQueryWhereFromUserProfileIsBlockedByUserProfile:(UFPFUserProfile *)userProfile;
 
-+ (PFQuery *)buildTopicQueryWhereFromUserIsDeleted;
++ (PFQuery *)buildTopicQueryWhereFromUserProfileIsDeleted;
 
-+ (PFQuery *)buildTopicQueryWhereFromUserIsLocked;
++ (PFQuery *)buildTopicQueryWhereFromUserProfileIsLocked;
 
 @end
 

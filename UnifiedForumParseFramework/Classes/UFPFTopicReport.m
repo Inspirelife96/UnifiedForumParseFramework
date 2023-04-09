@@ -11,7 +11,7 @@
 
 @implementation UFPFTopicReport
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toTopic;
 @dynamic reason;
 

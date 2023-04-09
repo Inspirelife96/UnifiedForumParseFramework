@@ -11,13 +11,14 @@
 @class UFPFPost;
 @class UFPFReply;
 @class UFPFMessageGroup;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFNotification : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
-@property (nonatomic, strong) PFUser *toUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
+@property (nonatomic, strong) UFPFUserProfile *toUserProfile;
 
 // 通知类型，包括
 // UFPFNotificationTypeComment 评论
@@ -45,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UFPFMessageGroup *messageGroup;
 
-// 特例：每一个fromUser/toUser组合仅保留最新的一条数据。
+// 特例：每一个fromUserProfile/toUser组合仅保留最新的一条数据。
 // 如果组合不存在，则添加，如果组合存在，则更新。
 //@property (nonatomic, strong) UFPFMessage *message;
 //@property (nonatomic, strong) NSNumber *unreadMessageCount;

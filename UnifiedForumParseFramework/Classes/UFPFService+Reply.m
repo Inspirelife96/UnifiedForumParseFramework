@@ -10,11 +10,12 @@
 #import "UFPFDefines.h"
 
 #import "UFPFService+Notification.h"
-#import "UFPFService+User.h"
+#import "UFPFService+UserProfile.h"
 #import "UFPFService+Block.h"
 
 #import "UFPFPost.h"
 #import "UFPFReply.h"
+#import "UFPFUserProfile.h"
 
 @implementation UFPFService (Reply)
 
@@ -35,14 +36,14 @@
     
     // 默认条件4:登录状态下，发布者不能在登录用户的黑名单中
     PFQuery *isDeletedUserQuery = [PFQuery queryWithClassName:PFUserKeyClass];
-    [isDeletedUserQuery whereKey:UFPFUserKeyIsDeleted equalTo:@(YES)];
-    [query whereKey:UFPFPostKeyFromUser doesNotMatchQuery:isDeletedUserQuery];
+    [isDeletedUserQuery whereKey:UFPFUserProfileKeyIsDeleted equalTo:@(YES)];
+    [query whereKey:UFPFPostKeyFromUserProfile doesNotMatchQuery:isDeletedUserQuery];
     
     // 如果时登录用户，屏蔽黑名单
     if ([PFUser currentUser]) {
-        PFQuery *blockQuery = [PFQuery queryWithClassName:UFPFBlockKeyClass];
-        [blockQuery whereKey:UFPFBlockKeyFromUser equalTo:[PFUser currentUser]];
-        [query whereKey:UFPFReplyKeyFromUser doesNotMatchKey:UFPFBlockKeyToUser inQuery:blockQuery];
+        UFPFUserProfile *currentUserProfile = [[PFUser currentUser] objectForKey:UFPFUserKeyUserProfile];
+        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:currentUserProfile];
+        [query whereKey:UFPFReplyKeyFromUserProfile doesNotMatchKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     }
     
     [query whereKey:UFPFReplyKeyToPost equalTo:toPost];
@@ -63,9 +64,9 @@
             isApproved:(BOOL)isApproved
              isDeleted:(BOOL)isDeleted
                content:(NSString *)content
-              fromUser:(PFUser *)fromUser
+              fromUserProfile:(UFPFUserProfile *)fromUserProfile
                  error:(NSError **)error {
-    return [UFPFService addReplyToPost:toPost isApproved:isApproved isDeleted:isDeleted content:content fromUser:fromUser toReply:nil error:error];
+    return [UFPFService addReplyToPost:toPost isApproved:isApproved isDeleted:isDeleted content:content fromUserProfile:fromUserProfile toReply:nil error:error];
 }
 
 
@@ -73,16 +74,16 @@
             isApproved:(BOOL)isApproved
              isDeleted:(BOOL)isDeleted
                content:(NSString *)content
-              fromUser:(PFUser *)fromUser
+              fromUserProfile:(UFPFUserProfile *)fromUserProfile
                   error:(NSError **)error {
-    return [UFPFService addReplyToPost:toReply.toPost isApproved:isApproved isDeleted:isDeleted content:content fromUser:fromUser toReply:toReply error:error];
+    return [UFPFService addReplyToPost:toReply.toPost isApproved:isApproved isDeleted:isDeleted content:content fromUserProfile:fromUserProfile toReply:toReply error:error];
 }
 
 + (UFPFReply *)addReplyToPost:(UFPFPost *)toPost
             isApproved:(BOOL)isApproved
              isDeleted:(BOOL)isDeleted
                content:(NSString *)content
-              fromUser:(PFUser *)fromUser
+              fromUserProfile:(UFPFUserProfile *)fromUserProfile
                toReply:(UFPFReply * _Nullable)toReply
                  error:(NSError **)error
 {
@@ -92,7 +93,7 @@
     reply.isDeleted = isDeleted;
     
     reply.content = content;
-    reply.fromUser = fromUser;
+    reply.fromUserProfile = fromUserProfile;
     reply.toPost = toPost;
     
     reply.likeCount = @(0);
@@ -109,15 +110,15 @@
     // 如果是针对Post的回复，则发给Post的所有者
     // 如果是针对Reply的回复，则发给Reply的所有者
     if (succeeded) {
-        PFUser *toUser = toPost.fromUser;
+        UFPFUserProfile *toUserProfile = toPost.fromUserProfile;
         NSString *subType = UFPFNotificationSubTypeCommentPost;
         if (toReply) {
-            toUser = toReply.fromUser;
+            toUserProfile = toReply.fromUserProfile;
             subType = UFPFNotificationSubTypeCommentReply;
         }
         
         NSError *notificationError = nil;
-        [UFPFService addNotificationFromUser:fromUser toUser:toUser type:UFPFNotificationTypeComment subType:subType topic:nil post:nil reply:reply messageGroup:nil error:&notificationError];
+        [UFPFService addNotificationFromUserProfile:fromUserProfile toUserProfile:toUserProfile type:UFPFNotificationTypeComment subType:subType topic:nil post:nil reply:reply messageGroup:nil error:&notificationError];
         
         return reply;
     } else {
@@ -127,7 +128,7 @@
 
 + (BOOL)updateReply:(UFPFReply *)reply content:(NSString *)content error:(NSError **)error {
     NSAssert([PFUser currentUser], @"必须登录才能更新Reply");
-    NSAssert([[PFUser currentUser].objectId isEqualToString:reply.fromUser.objectId], @"登录用户必须和发布者一致才能更新Post");
+    NSAssert([[PFUser currentUser].objectId isEqualToString:reply.fromUserProfile.objectId], @"登录用户必须和发布者一致才能更新Post");
 
     reply.content = content;
     return [reply save:error];
@@ -143,24 +144,24 @@
     return [reply save:error];
 }
 
-+ (PFQuery *)buildReplyQueryWhereFromUserIsBlockedByUser:(PFUser *)user {
++ (PFQuery *)buildReplyQueryWhereFromUserProfileIsBlockedByUserProfile:(UFPFUserProfile *)userProfile {
     PFQuery *replyQuery = [PFQuery queryWithClassName:UFPFReplyKeyClass];
-    PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserIs:user];
-    [replyQuery whereKey:UFPFReplyKeyFromUser matchesKey:UFPFBlockKeyToUser inQuery:blockQuery];
+    PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:userProfile];
+    [replyQuery whereKey:UFPFReplyKeyFromUserProfile matchesKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     return replyQuery;
 }
 
 + (PFQuery *)buildReplyQueryWhereFromUserIsDeleted {
     PFQuery *replyQuery = [PFQuery queryWithClassName:UFPFReplyKeyClass];
-    PFQuery *userQuery = [UFPFService buildUserQueryWhereUserIsDeleted];
-    [replyQuery whereKey:UFPFReplyKeyFromUser matchesQuery:userQuery];
+    PFQuery *userQuery = [UFPFService buildUserProfileQueryWhereUserIsDeleted];
+    [replyQuery whereKey:UFPFReplyKeyFromUserProfile matchesQuery:userQuery];
     return replyQuery;
 }
 
 + (PFQuery *)buildReplyQueryWhereFromUserIsLocked {
     PFQuery *replyQuery = [PFQuery queryWithClassName:UFPFReplyKeyClass];
-    PFQuery *userQuery = [UFPFService buildUserQueryWhereUserIsLocked];
-    [replyQuery whereKey:UFPFReplyKeyFromUser matchesQuery:userQuery];
+    PFQuery *userQuery = [UFPFService buildUserProfileQueryWhereUserIsLocked];
+    [replyQuery whereKey:UFPFReplyKeyFromUserProfile matchesQuery:userQuery];
     return replyQuery;
 }
 

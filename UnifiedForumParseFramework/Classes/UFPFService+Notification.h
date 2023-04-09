@@ -14,44 +14,45 @@ NS_ASSUME_NONNULL_BEGIN
 @class UFPFReply;
 @class UFPFMessageGroup;
 @class UFPFNotification;
+@class UFPFUserProfile;
 
 @interface UFPFService (Notification)
 
-+ (NSArray<UFPFNotification *> *)findCommentNotificationToUser:(PFUser *)toUser
-                                                         page:(NSInteger)page
-                                                    pageCount:(NSInteger)pageCount
-                                                        error:(NSError **)error;
++ (NSArray<UFPFNotification *> *)findCommentNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                 page:(NSInteger)page
+                                                            pageCount:(NSInteger)pageCount
+                                                                error:(NSError **)error;
 
-+ (NSArray<UFPFNotification *> *)findLikeNotificationToUser:(PFUser *)toUser
-                                                      page:(NSInteger)page
-                                                 pageCount:(NSInteger)pageCount
-                                                     error:(NSError **)error;
-
-+ (NSArray<UFPFNotification *> *)findFollowNotificationToUser:(PFUser *)toUser
-                                                        page:(NSInteger)page
-                                                   pageCount:(NSInteger)pageCount
-                                                       error:(NSError **)error;
-
-+ (NSArray<UFPFNotification *> *)findMessageGroupNotificationToUser:(PFUser *)toUser
++ (NSArray<UFPFNotification *> *)findLikeNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
                                                               page:(NSInteger)page
                                                          pageCount:(NSInteger)pageCount
                                                              error:(NSError **)error;
 
-+ (NSArray<UFPFNotification *> *)findOtherNotificationToUser:(PFUser *)toUser
-                                                       page:(NSInteger)page
-                                                  pageCount:(NSInteger)pageCount
-                                                      error:(NSError **)error;
++ (NSArray<UFPFNotification *> *)findFollowNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                page:(NSInteger)page
+                                                           pageCount:(NSInteger)pageCount
+                                                               error:(NSError **)error;
 
-// 部分在客户端实现，部分会在服务器端实现
-+ (BOOL)addNotificationFromUser:(PFUser *)fromUser
-                         toUser:(PFUser *)toUser
-                           type:(NSString *)type
-                        subType:(NSString *)subType
-                          topic:(UFPFTopic * _Nullable)topic
-                           post:(UFPFPost * _Nullable)post
-                          reply:(UFPFReply * _Nullable)reply
-                   messageGroup:(UFPFMessageGroup * _Nullable)messageGroup
-                          error:(NSError **)error;
++ (NSArray<UFPFNotification *> *)findMessageGroupNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                      page:(NSInteger)page
+                                                                 pageCount:(NSInteger)pageCount
+                                                                     error:(NSError **)error;
+
++ (NSArray<UFPFNotification *> *)findOtherNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                               page:(NSInteger)page
+                                                          pageCount:(NSInteger)pageCount
+                                                              error:(NSError **)error;
+
+// 部分在客户端实现，部分会在服务器端实现 // todo:这个需要吗？照理说应该全部在服务器实现
++ (BOOL)addNotificationFromUserProfile:(UFPFUserProfile *)fromUserProfile
+                         toUserProfile:(UFPFUserProfile *)toUserProfile
+                                  type:(NSString *)type
+                               subType:(NSString *)subType
+                                 topic:(UFPFTopic * _Nullable)topic
+                                  post:(UFPFPost * _Nullable)post
+                                 reply:(UFPFReply * _Nullable)reply
+                          messageGroup:(UFPFMessageGroup * _Nullable)messageGroup
+                                 error:(NSError **)error;
 
 @end
 

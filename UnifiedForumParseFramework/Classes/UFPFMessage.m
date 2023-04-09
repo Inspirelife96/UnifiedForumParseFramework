@@ -13,8 +13,8 @@
 
 @implementation UFPFMessage
 
-@dynamic fromUser;
-@dynamic toUser;
+@dynamic fromUserProfile;
+@dynamic toUserProfile;
 @dynamic content;
 
 + (NSString *)parseClassName {

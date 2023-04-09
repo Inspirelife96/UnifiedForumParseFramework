@@ -10,30 +10,31 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFFollow;
+@class UFPFUserProfile;
 
 @interface UFPFService (Follow)
 
 // Follow表查询
 
 // 查找user的粉丝
-+ (NSArray <PFUser *> *)findFollower:(PFUser *)user
++ (NSArray<UFPFUserProfile *> *)findFollower:(UFPFUserProfile *)userProfile
                                 page:(NSInteger)page
                            pageCount:(NSInteger)pageCount
                                error:(NSError **)error;
 // 查找user的关注
-+ (NSArray <PFUser *> *)findFollowing:(PFUser *)user
++ (NSArray<UFPFUserProfile *> *)findFollowing:(UFPFUserProfile *)userProfile
                                  page:(NSInteger)page
                             pageCount:(NSInteger)pageCount
                                 error:(NSError **)error;
 
-// 查询fromUser是否关注了toUser
-+ (BOOL)isFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error;
+// 查询fromUserProfile是否关注了toUser
++ (BOOL)isFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error;
 
 // Follow表添加
-+ (UFPFFollow *)addFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error;
++ (UFPFFollow *)addFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error;
 
 // Follow表删除
-+ (BOOL)deleteFollowFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error;
++ (BOOL)deleteFollowFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error;
 + (BOOL)deleteFollow:(UFPFFollow *)follow error:(NSError **)error;
 
 @end

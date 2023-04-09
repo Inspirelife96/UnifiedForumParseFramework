@@ -13,8 +13,8 @@
 
 @implementation UFPFBlock
 
-@dynamic fromUser;
-@dynamic toUser;
+@dynamic fromUserProfile;
+@dynamic toUserProfile;
 
 + (NSString *)parseClassName {
     return UFPFBlockKeyClass;

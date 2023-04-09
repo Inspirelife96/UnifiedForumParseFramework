@@ -13,10 +13,10 @@
 
 @implementation UFPFService (Block)
 
-+ (UFPFBlock *)addBlockFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser error:(NSError **)error {
++ (UFPFBlock *)addBlockFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile error:(NSError **)error {
     UFPFBlock *block = [[UFPFBlock alloc] init];
-    block.fromUser = fromUser;
-    block.toUser = toUser;
+    block.fromUserProfile = fromUserProfile;
+    block.toUserProfile = toUserProfile;
     
     BOOL succeeded = [block save:error];
     
@@ -27,9 +27,9 @@
     }
 }
 
-+ (PFQuery *)buildBlockQueryWhereFromUserIs:(PFUser *)user {
++ (PFQuery *)buildBlockQueryWhereFromUserProfileIs:(UFPFUserProfile *)userProfile {
     PFQuery *query = [PFQuery queryWithClassName:UFPFBlockKeyClass];
-    [query whereKey:UFPFBlockKeyFromUser equalTo:user];
+    [query whereKey:UFPFBlockKeyFromUserProfile equalTo:userProfile];
     return query;
 }
 

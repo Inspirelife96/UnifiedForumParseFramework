@@ -7,18 +7,15 @@
 
 #import "UFPFService+User.h"
 
-#import "UFPFService+Installation.h"
-#import "UFPFService+Session.h"
+#import <Parse/Parse-umbrella.h>
+#import <Parse/PFErrorUtilities.h>
 
 #import "UFPFDefines.h"
-#import "UFPFStatisticsInfo.h"
+#import "UFPFUserProfile.h"
 #import "UFPFBadgeCount.h"
 
-#import "PFUser.h"
-
-#import <Parse/Parse-umbrella.h>
-
-#import <Parse/PFErrorUtilities.h>
+#import "UFPFService+Installation.h"
+#import "UFPFService+Session.h"
 
 @implementation UFPFService (User)
 
@@ -155,31 +152,14 @@
 #pragma mark Private Methods
 
 + (BOOL)_configUserAfterLogin:(PFUser *)user error:(NSError **)error {
-    // 判断该用户是否被锁定
-    if ([user objectForKey:UFPFUserKeyIsLocked]) {
-        *error = [PFErrorUtilities errorWithCode:kUFPFErrorUserIsLocked message:@"The User is Locked"];
-        return NO;
-    }
-    
-    // 判断该用户是否被注销
-    if ([user objectForKey:UFPFUserKeyIsDeleted]) {
-        *error = [PFErrorUtilities errorWithCode:kUFPFErrorUserIsDeleted message:@"The User is Deleted"];
-        return NO;
-    }
-    
     // 提取statisticsInfo
-    BOOL succeeded =  [UFPFService _fetchStatisticsInfoForUser:user error:error];
+    BOOL succeeded =  [UFPFService _fetchUserProfileForUser:user error:error];
     
     // 提取BadgeCount
     if (succeeded) {
         succeeded = [UFPFService _fetchBadgeCountForUser:user error:error];
     }
     
-    // 设置语言
-    if (succeeded) {
-        succeeded = [UFPFService _setPreferredLanguageForUser:user error:error];
-    }
-
     // 将当前用户和当前设备进行关联
     if (succeeded) {
         succeeded = [UFPFService linkCurrentInstalltionWithCurrentUser:error];
@@ -190,36 +170,30 @@
         succeeded = [UFPFService removeInvalidSessions:error];
     }
     
+    UFPFUserProfile *userProfile = [user objectForKey:UFPFUserKeyUserProfile];
+
+    // 判断该用户是否被锁定
+    if ([userProfile objectForKey:UFPFUserProfileKeyIsLocked]) {
+        *error = [PFErrorUtilities errorWithCode:kUFPFErrorUserIsLocked message:@"The User is Locked"];
+        return NO;
+    }
+    
+    // 判断该用户是否被注销
+    if ([userProfile objectForKey:UFPFUserProfileKeyIsDeleted]) {
+        *error = [PFErrorUtilities errorWithCode:kUFPFErrorUserIsDeleted message:@"The User is Deleted"];
+        return NO;
+    }
+    
     return succeeded;
 }
 
 + (BOOL)_configUserAfterSignUp:(PFUser *)user error:(NSError **)error {
-    // 激活用户
-    BOOL succeeded = [UFPFService _activeUser:user error:error];
-    
-    // 生产StatisticsInfo并关联
-    if (succeeded) {
-        succeeded = [UFPFService _createStatisticsInfoForUser:user error:error];
-    }
-    
-    // 加载statisticsInfo
-    if (succeeded) {
-        succeeded = [UFPFService _fetchStatisticsInfoForUser:user error:error];
-    }
+    // 创建UFPFUserProfile并关联
+    BOOL succeeded = [UFPFService _createUserProfileForUser:user error:error];
     
     // 创建BadgeCount并关联
     if (succeeded) {
         succeeded = [UFPFService _createBadgeCountForUser:user error:error];
-    }
-    
-    // 加载BadgeCount
-    if (succeeded) {
-        succeeded = [UFPFService _fetchBadgeCountForUser:user error:error];
-    }
-    
-    // 设置语言
-    if (succeeded) {
-        succeeded = [UFPFService _setPreferredLanguageForUser:user error:error];
     }
     
     // 将当前用户和当前设备进行关联
@@ -230,12 +204,6 @@
     return succeeded;
 }
 
-+ (BOOL)_setPreferredLanguageForUser:(PFUser *)user error:(NSError **)error {
-    NSString *preferredLanguage = [[[NSBundle mainBundle] preferredLocalizations] firstObject];
-    [user setObject:preferredLanguage forKey:UFPFUserKeyPreferredLanguage];
-    return [user save:error];
-}
-
 // 用户退出登录之前，解除登录用户和当前设备的绑定。这样就不会推送和登录用户相关的信息。
 + (void)_configUserBeforeLogout {
     NSError *error = nil;
@@ -244,44 +212,51 @@
 }
 
 + (BOOL)_activeUser:(PFUser *)user error:(NSError **)error {
-    [user setObject:@(NO) forKey:UFPFUserKeyIsLocked];
-    [user setObject:@(NO) forKey:UFPFUserKeyIsDeleted];
+    [user setObject:@(NO) forKey:UFPFUserProfileKeyIsLocked];
+    [user setObject:@(NO) forKey:UFPFUserProfileKeyIsDeleted];
     return [user save:error];
 }
 
 + (BOOL)_unsubscribeUser:(PFUser *)user error:(NSError **)error {
-    [user setObject:@(YES) forKey:UFPFUserKeyIsDeleted];
+    [user setObject:@(YES) forKey:UFPFUserProfileKeyIsDeleted];
     return [user save:error];
 }
 
-+ (BOOL)_createStatisticsInfoForUser:(PFUser *)user error:(NSError **)error {
-    UFPFStatisticsInfo *statisticsInfo = [[UFPFStatisticsInfo alloc] init];
++ (BOOL)_createUserProfileForUser:(PFUser *)user error:(NSError **)error {
+    UFPFUserProfile *userProfile = [[UFPFUserProfile alloc] init];
     
-    statisticsInfo.user = user;
-    statisticsInfo.profileViews = @(0);
-    statisticsInfo.reputation = @(0);
-    statisticsInfo.topicCount = @(0);
-    statisticsInfo.postCount = @(0);
-    statisticsInfo.followerCount = @(0);
-    statisticsInfo.followingCount = @(0);
-    statisticsInfo.likedCount = @(0);
+    userProfile.user = user;
+    userProfile.nickName = user.username;
+    userProfile.avatar = nil;
+    userProfile.backgroundImage = nil;
+    userProfile.bio = nil;
+    userProfile.preferredLanguage = [[[NSBundle mainBundle] preferredLocalizations] firstObject];;
+    userProfile.isLocked = NO;
+    userProfile.isDeleted = NO;
+    userProfile.profileViews = @(0);
+    userProfile.reputation = @(0);
+    userProfile.topicCount = @(0);
+    userProfile.postCount = @(0);
+    userProfile.followerCount = @(0);
+    userProfile.followingCount = @(0);
+    userProfile.likedCount = @(0);
     
-    BOOL succeeded = [statisticsInfo save:error];
+    BOOL succeeded = [userProfile save:error];
     
     if (succeeded) {
-        [user setObject:statisticsInfo forKey:UFPFUserKeyStatisticsInfo];
+        [user setObject:userProfile forKey:UFPFUserKeyUserProfile];
         return [user save:error];
     } else {
         return NO;
     }
 }
 
-+ (BOOL)_fetchStatisticsInfoForUser:(PFUser *)user error:(NSError **)error {
-    UFPFStatisticsInfo *statisticsInfo = [user objectForKey:UFPFUserKeyStatisticsInfo];
-    if (statisticsInfo) {
-        return [statisticsInfo fetchIfNeeded:error];
++ (BOOL)_fetchUserProfileForUser:(PFUser *)user error:(NSError **)error {
+    UFPFUserProfile *userProfile = [user objectForKey:UFPFUserKeyUserProfile];
+    if (userProfile) {
+        return [userProfile fetchIfNeeded:error];
     } else {
-        return [UFPFService _createStatisticsInfoForUser:user error:error];
+        return [UFPFService _createUserProfileForUser:user error:error];
     }
 }
 
@@ -313,28 +288,6 @@
     } else {
         return [UFPFService _createBadgeCountForUser:user error:error];
     }
-}
-
-+ (PFQuery *)deletedOrLockedUserQuery {
-    PFQuery *deletedUserQuery = [PFQuery queryWithClassName:PFUserKeyClass];
-    [deletedUserQuery whereKey:UFPFUserKeyIsDeleted equalTo:@(YES)];
-    
-    PFQuery *lockedUserQuery = [PFQuery queryWithClassName:PFUserKeyClass];
-    [lockedUserQuery whereKey:UFPFUserKeyIsLocked equalTo:@(YES)];
-    
-    return [PFQuery orQueryWithSubqueries:@[deletedUserQuery, lockedUserQuery]];
-}
-
-+ (PFQuery *)buildUserQueryWhereUserIsDeleted {
-    PFQuery *query = [PFQuery queryWithClassName:PFUserKeyClass];
-    [query whereKey:UFPFUserKeyIsDeleted equalTo:@(YES)];
-    return query;
-}
-
-+ (PFQuery *)buildUserQueryWhereUserIsLocked {
-    PFQuery *query = [PFQuery queryWithClassName:PFUserKeyClass];
-    [query whereKey:UFPFUserKeyIsLocked equalTo:@(YES)];
-    return query;
 }
 
 // 绑定用户和设备，重置badge

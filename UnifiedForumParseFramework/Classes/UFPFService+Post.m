@@ -13,8 +13,10 @@
 #import "UFPFTopic.h"
 
 #import "UFPFService+Notification.h"
-#import "UFPFService+User.h"
+#import "UFPFService+UserProfile.h"
 #import "UFPFService+Block.h"
+
+#import "UFPFUserProfile.h"
 
 #import <Parse/PFErrorUtilities.h>
 
@@ -27,23 +29,23 @@
                                  pageCount:(NSInteger)pageCount
                                      error:(NSError **)error
 {
-    return [UFPFService findPostsToTopic:toTopic fromUser:nil category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
+    return [UFPFService findPostsToTopic:toTopic fromUserProfile:nil category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 // - 查询某一个Topic下某个人的所有回贴 - 例如：即只看楼主的功能
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                  fromUser:(PFUser *)fromUser
+                                  fromUserProfile:(UFPFUserProfile *)fromUserProfile
                                    orderBy:(NSString *)orderBy
                         isOrderByAscending:(BOOL)isOrderByAscending
                                       page:(NSInteger)page
                                  pageCount:(NSInteger)pageCount
                                      error:(NSError **)error
 {
-    return [UFPFService findPostsToTopic:toTopic fromUser:fromUser category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
+    return [UFPFService findPostsToTopic:toTopic fromUserProfile:fromUserProfile category:nil orderBy:orderBy isOrderByAscending:isOrderByAscending page:page pageCount:pageCount error:error];
 }
 
 + (NSArray *)findPostsToTopic:(UFPFTopic * _Nullable)toTopic
-                     fromUser:(PFUser * _Nullable)fromUser
+                     fromUserProfile:(UFPFUserProfile * _Nullable)fromUserProfile
                      category:(UFPFCategory * _Nullable)category
                       orderBy:(NSString *)orderBy
            isOrderByAscending:(BOOL)isOrderByAscending
@@ -61,14 +63,14 @@
     
     // 默认条件3:发布者不能被注销
     PFQuery *isDeletedUserQuery = [PFQuery queryWithClassName:PFUserKeyClass];
-    [isDeletedUserQuery whereKey:UFPFUserKeyIsDeleted equalTo:@(YES)];
-    [query whereKey:UFPFPostKeyFromUser doesNotMatchQuery:isDeletedUserQuery];
+    [isDeletedUserQuery whereKey:UFPFUserProfileKeyIsDeleted equalTo:@(YES)];
+    [query whereKey:UFPFPostKeyFromUserProfile doesNotMatchQuery:isDeletedUserQuery];
     
     // 默认条件4:登录状态下，发布者不能在登录用户的黑名单中
     if ([PFUser currentUser]) {
-        PFQuery *blockQuery = [PFQuery queryWithClassName:UFPFBlockKeyClass];
-        [blockQuery whereKey:UFPFBlockKeyFromUser equalTo:[PFUser currentUser]];
-        [query whereKey:UFPFPostKeyFromUser doesNotMatchKey:UFPFBlockKeyToUser inQuery:blockQuery];
+        UFPFUserProfile *currentUserProfile = [[PFUser currentUser] objectForKey:UFPFUserKeyUserProfile];
+        PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:currentUserProfile];
+        [query whereKey:UFPFPostKeyFromUserProfile doesNotMatchKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     }
 
     // 查询条件1: 指定Topic
@@ -77,8 +79,8 @@
     }
     
     // 查询条件2: 指定FromUser
-    if (fromUser) {
-        [query whereKey:UFPFPostKeyFromUser equalTo:fromUser];
+    if (fromUserProfile) {
+        [query whereKey:UFPFPostKeyFromUserProfile equalTo:fromUserProfile];
     }
     
     // 查询条件3: 指定板块
@@ -105,7 +107,7 @@
                     content:(NSString *)content
            mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
                      mediaFileType:(NSString *)mediaFileType
-                   fromUser:(PFUser *)fromUser
+                   fromUserProfile:(UFPFUserProfile *)fromUserProfile
                     toTopic:(UFPFTopic *)toTopic
                       error:(NSError **)error
 {
@@ -125,15 +127,15 @@
     
     post.likeCount = @(0);
     
-    post.fromUser = fromUser;
+    post.fromUserProfile = fromUserProfile;
     post.toTopic = toTopic;
     
     BOOL succeeded = [post save:error];
     
     if (succeeded) {
         //添加通知
-        NSError *notificationError = nil;
-        [UFPFService addNotificationFromUser:fromUser toUser:toTopic.fromUser type:UFPFNotificationTypeComment subType:UFPFNotificationSubTypeCommentTopic topic:nil post:post reply:nil messageGroup:nil error:&notificationError];
+//        NSError *notificationError = nil;
+//        [UFPFService addNotificationFromUserProfile:fromUserProfile toUser:toTopic.fromUserProfile type:UFPFNotificationTypeComment subType:UFPFNotificationSubTypeCommentTopic topic:nil post:post reply:nil messageGroup:nil error:&notificationError];
         return post;
     } else {
         return nil;
@@ -148,7 +150,7 @@
              error:(NSError **)error;
 {
     NSAssert([PFUser currentUser], @"必须登录才能更新Post");
-    NSAssert([[PFUser currentUser].objectId isEqualToString:post.fromUser.objectId], @"登录用户必须和发布者一致才能更新Post");
+    NSAssert([[PFUser currentUser].objectId isEqualToString:post.fromUserProfile.objectId], @"登录用户必须和发布者一致才能更新Post");
     
     post.content = content;
     post.mediaFileObjects = mediaFileObjects;
@@ -169,24 +171,24 @@
     return [post save:error];
 }
 
-+ (PFQuery *)buildPostQueryWhereFromUserIsBlockedByUser:(PFUser *)user {
++ (PFQuery *)buildPostQueryWhereFromUserProfileIsBlockedByUserProfile:(UFPFUserProfile *)userProfile {
     PFQuery *postQuery = [PFQuery queryWithClassName:UFPFPostKeyClass];
-    PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserIs:user];
-    [postQuery whereKey:UFPFPostKeyFromUser matchesKey:UFPFBlockKeyToUser inQuery:blockQuery];
+    PFQuery *blockQuery = [UFPFService buildBlockQueryWhereFromUserProfileIs:userProfile];
+    [postQuery whereKey:UFPFPostKeyFromUserProfile matchesKey:UFPFBlockKeyToUserProfile inQuery:blockQuery];
     return postQuery;
 }
 
 + (PFQuery *)buildPostQueryWhereFromUserIsDeleted {
     PFQuery *postQuery = [PFQuery queryWithClassName:UFPFPostKeyClass];
-    PFQuery *userQuery = [UFPFService buildUserQueryWhereUserIsDeleted];
-    [postQuery whereKey:UFPFPostKeyFromUser matchesQuery:userQuery];
+    PFQuery *userQuery = [UFPFService buildUserProfileQueryWhereUserIsDeleted];
+    [postQuery whereKey:UFPFPostKeyFromUserProfile matchesQuery:userQuery];
     return postQuery;
 }
 
 + (PFQuery *)buildPostQueryWhereFromUserIsLocked {
     PFQuery *postQuery = [PFQuery queryWithClassName:UFPFPostKeyClass];
-    PFQuery *userQuery = [UFPFService buildUserQueryWhereUserIsLocked];
-    [postQuery whereKey:UFPFPostKeyFromUser matchesQuery:userQuery];
+    PFQuery *userQuery = [UFPFService buildUserProfileQueryWhereUserIsLocked];
+    [postQuery whereKey:UFPFPostKeyFromUserProfile matchesQuery:userQuery];
     return postQuery;
 }
 

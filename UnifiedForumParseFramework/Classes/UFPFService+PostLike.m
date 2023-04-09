@@ -19,8 +19,8 @@
 @implementation UFPFService (PostLike)
 
 // 判断用户是否喜欢这个Post
-+ (BOOL)isPost:(UFPFPost *)post likedbyUser:(PFUser *)user error:(NSError **)error {
-    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUser:user toPost:post isDeleted:NO error:error];
++ (BOOL)isPost:(UFPFPost *)post likedbyUserProfile:(UFPFUserProfile *)userProfile error:(NSError **)error {
+    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUserProfile:userProfile toPost:post isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -34,9 +34,9 @@
 }
 
 // 添加
-+ (UFPFPostLike *)addPostLikeWithFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost error:(NSError **)error {
++ (UFPFPostLike *)addPostLikeWithFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost error:(NSError **)error {
     // PostLike是否已经存在
-    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUser:fromUser toPost:toPost isDeleted:NO error:error];
+    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUserProfile:fromUserProfile toPost:toPost isDeleted:NO error:error];
     if (*error) {
         return nil;
     } else {
@@ -46,7 +46,7 @@
     }
     
     // 存在相应的记录但isDeleted标记为是YES，此时修正为NO即可
-    postLikes =  [UFPFService _findPostLikeFromUser:fromUser toPost:toPost isDeleted:YES error:error];
+    postLikes =  [UFPFService _findPostLikeFromUserProfile:fromUserProfile toPost:toPost isDeleted:YES error:error];
     if (*error) {
         return nil;
     } else {
@@ -62,7 +62,7 @@
     
     // 不存在记录，那么添加一条新的
     UFPFPostLike *postLike = [[UFPFPostLike alloc] init];
-    postLike.fromUser = fromUser;
+    postLike.fromUserProfile = fromUserProfile;
     postLike.toPost = toPost;
     postLike.isDeleted = NO;
     
@@ -70,8 +70,8 @@
     
     if (succeeded) {
         // 首次喜欢，向消息表中添加一条记录
-        NSError *notificationError = nil;
-        [UFPFService addNotificationFromUser:fromUser toUser:toPost.fromUser type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikePost topic:nil post:toPost reply:nil messageGroup:nil error:&notificationError];
+//        NSError *notificationError = nil;
+//        [UFPFService addNotificationFromUserProfile:fromUserProfile toUser:toPost.fromUserProfile type:UFPFNotificationTypeLike subType:UFPFNotificationSubTypeLikePost topic:nil post:toPost reply:nil messageGroup:nil error:&notificationError];
         return postLike;
     } else {
         return nil;
@@ -83,8 +83,8 @@
     return [UFPFService _updatePostLike:postLike isDeleted:YES error:error];
 }
 
-+ (BOOL)deletePostLikeFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost error:(NSError **)error {
-    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUser:fromUser toPost:toPost isDeleted:NO error:error];
++ (BOOL)deletePostLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost error:(NSError **)error {
+    NSArray<UFPFPostLike *> *postLikes =  [UFPFService _findPostLikeFromUserProfile:fromUserProfile toPost:toPost isDeleted:NO error:error];
     
     if (*error) {
         return NO;
@@ -106,9 +106,9 @@
     }
 }
 
-+ (NSArray<UFPFPostLike *> *)_findPostLikeFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost isDeleted:(BOOL)isDeleted error:(NSError **)error {
++ (NSArray<UFPFPostLike *> *)_findPostLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost isDeleted:(BOOL)isDeleted error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFPostLikeKeyClass];
-    [query whereKey:UFPFPostLikeKeyFromUser equalTo:fromUser];
+    [query whereKey:UFPFPostLikeKeyFromUserProfile equalTo:fromUserProfile];
     [query whereKey:UFPFPostLikeKeyToPost equalTo:toPost];
     [query whereKey:UFPFPostLikeKeyIsDeleted equalTo:@(isDeleted)];
     return [query findObjects:error];

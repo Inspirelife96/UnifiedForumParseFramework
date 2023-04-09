@@ -10,10 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFReply;
+@class UFPFUserProfile;
 
 @interface UFPFReplyLike : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFReply *toReply;
 @property (nonatomic, assign) BOOL isDeleted;
 

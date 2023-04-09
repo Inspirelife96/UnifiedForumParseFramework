@@ -11,10 +11,10 @@
 
 @implementation UFPFService (ReplyReport)
 
-+ (UFPFReplyReport *)addReplyReportFromUser:(PFUser *)fromUser toReply:(UFPFReply *)toReply forReason:(UFPFParseReportReason)reason error:(NSError **)error {
++ (UFPFReplyReport *)addReplyReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toReply:(UFPFReply *)toReply forReason:(UFPFParseReportReason)reason error:(NSError **)error {
     UFPFReplyReport *replyReport = [[UFPFReplyReport alloc] init];
     
-    replyReport.fromUser = fromUser;
+    replyReport.fromUserProfile = fromUserProfile;
     replyReport.toReply = toReply;
     replyReport.reason = @(reason);
     

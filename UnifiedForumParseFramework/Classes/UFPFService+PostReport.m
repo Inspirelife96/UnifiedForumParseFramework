@@ -11,10 +11,10 @@
 
 @implementation UFPFService (PostReport)
 
-+ (UFPFPostReport *)addPostReportFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost forReason:(UFPFParseReportReason)reason error:(NSError **)error {
++ (UFPFPostReport *)addPostReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost forReason:(UFPFParseReportReason)reason error:(NSError **)error {
     UFPFPostReport *postReport = [[UFPFPostReport alloc] init];
     
-    postReport.fromUser = fromUser;
+    postReport.fromUserProfile = fromUserProfile;
     postReport.toPost = toPost;
     postReport.reason = @(reason);
     

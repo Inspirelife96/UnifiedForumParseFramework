@@ -10,10 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFTopic;
+@class UFPFUserProfile;
 
 @interface UFPFTopicLike : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFTopic *toTopic;
 @property (nonatomic, assign) BOOL isDeleted;
 

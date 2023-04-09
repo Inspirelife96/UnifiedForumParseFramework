@@ -12,6 +12,7 @@
 @class UFPFPost;
 @class UFPFReply;
 @class PFUser;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // - 查询某一个Topic下某个人的所有回贴 - 例如：即只看楼主的功能
 + (NSArray <UFPFPost *> *)findPostsToTopic:(UFPFTopic *)toTopic
-                                  fromUser:(PFUser *)fromUser
+                           fromUserProfile:(UFPFUserProfile *)fromUserProfile
                                    orderBy:(NSString *)orderBy
                         isOrderByAscending:(BOOL)isOrderByAscending
                                       page:(NSInteger)page
@@ -36,13 +37,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Post表添加
 + (UFPFPost *)addPostWithIsApproved:(BOOL)isApproved
-                  isDeleted:(BOOL)isDeleted
-                    content:(NSString *)content
-           mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
-                     mediaFileType:(NSString *)mediaFileType
-                   fromUser:(PFUser *)fromUser
-                    toTopic:(UFPFTopic *)toTopic
-                      error:(NSError **)error;
+                          isDeleted:(BOOL)isDeleted
+                            content:(NSString *)content
+                   mediaFileObjects:(NSArray<PFFileObject *> * _Nullable)mediaFileObjects
+                      mediaFileType:(NSString *)mediaFileType
+                    fromUserProfile:(UFPFUserProfile *)fromUserProfile
+                            toTopic:(UFPFTopic *)toTopic
+                              error:(NSError **)error;
 
 // 更新
 
@@ -63,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)updatePost:(UFPFPost *)post isApproved:(BOOL)isApproved error:(NSError **)error;
 
 // 辅助
-+ (PFQuery *)buildPostQueryWhereFromUserIsBlockedByUser:(PFUser *)user;
++ (PFQuery *)buildPostQueryWhereFromUserProfileIsBlockedByUserProfile:(UFPFUserProfile *)userProfile;
 
 + (PFQuery *)buildPostQueryWhereFromUserIsDeleted;
 

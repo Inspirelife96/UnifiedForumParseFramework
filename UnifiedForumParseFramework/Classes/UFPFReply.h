@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFPost;
+@class UFPFUserProfile;
 
 @interface UFPFReply : PFObject <PFSubclassing>
 
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber* likeCount; // 可以对Reply进行点赞，这个字段记录点赞的次数
 
 // 关系
-@property (nonatomic, strong) PFUser *fromUser; // 明确这条Reply是谁发布的
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile; // 明确这条Reply是谁发布的
 @property (nonatomic, strong) UFPFPost *toPost; // 这个字段不能为空，必须指定是针对哪个Post的回复
 @property (nonatomic, strong) UFPFReply *toReply; // 如果该字段不为空，那么该回复是针对toPost下的toReply的回复
 

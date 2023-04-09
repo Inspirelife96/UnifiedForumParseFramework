@@ -11,7 +11,7 @@
 
 @implementation UFPFReplyReport
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toReply;
 @dynamic reason;
 

@@ -13,12 +13,12 @@
 @implementation UFPFService (Share)
 
 + (BOOL)addShareTopic:(UFPFTopic *)Topic
-             fromUser:(PFUser *)fromUser
+             fromUserProfile:(UFPFUserProfile *)fromUserProfile
            toPlatform:(NSString *)toPlatform
                 error:(NSError **)error {
     UFPFShare *share = [[UFPFShare alloc] init];
 
-    share.fromUser = fromUser;
+    share.fromUserProfile = fromUserProfile;
     share.topic = Topic;
     share.toPlatform = toPlatform;
     

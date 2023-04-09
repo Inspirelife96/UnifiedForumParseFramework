@@ -1,17 +1,24 @@
 //
-//  UFPFStatisticsInfo.m
+//  UFPFUserProfile.m
 //  UFPFParse
 //
 //  Created by XueFeng Chen on 2021/6/26.
 //
 
-#import "UFPFStatisticsInfo.h"
+#import "UFPFUserProfile.h"
 
 #import "UFPFDefines.h"
 
-@implementation UFPFStatisticsInfo
+@implementation UFPFUserProfile
 
 @dynamic user;
+@dynamic nickName;
+@dynamic isLocked;
+@dynamic isDeleted;
+@dynamic avatar;
+@dynamic backgroundImage;
+@dynamic bio;
+@dynamic preferredLanguage;
 @dynamic profileViews;
 @dynamic reputation;
 @dynamic topicCount;
@@ -21,7 +28,7 @@
 @dynamic likedCount;
 
 + (NSString *)parseClassName {
-    return UFPFStatisticsInfoKeyClass;
+    return UFPFUserProfileKeyClass;
 }
 
 @end

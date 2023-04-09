@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFCategory;
 @class UFPFTag;
+@class UFPFUserProfile;
 
 @interface UFPFTopic : PFObject <PFSubclassing>
 
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *content; // 内容
 @property (nonatomic, strong) NSArray<PFFileObject *> *mediaFileObjects; // 图片/音频/视频文件/或者HTML/MD文件
 @property (nonatomic, strong) NSString *mediaFileType; // image/audio/video/html/md/mixed?
-@property (nonatomic, strong) PFUser *fromUser; // 发布者
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile; // 发布者
 
 // 统计字段：
 @property (nonatomic, strong) NSNumber *postCount; // 回帖次数

@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFPost;
 @class UFPFReply;
+@class UFPFUserProfile;
 
 @interface UFPFService (Reply)
 
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
             isApproved:(BOOL)isApproved
              isDeleted:(BOOL)isDeleted
                content:(NSString *)content
-              fromUser:(PFUser *)fromUser
+              fromUserProfile:(UFPFUserProfile *)fromUserProfile
                  error:(NSError **)error;
 
 
@@ -42,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
             isApproved:(BOOL)isApproved
              isDeleted:(BOOL)isDeleted
                content:(NSString *)content
-              fromUser:(PFUser *)fromUser
+              fromUserProfile:(UFPFUserProfile *)fromUserProfile
                  error:(NSError **)error;
 
 // 改
@@ -55,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 // 辅助
-+ (PFQuery *)buildReplyQueryWhereFromUserIsBlockedByUser:(PFUser *)user;
++ (PFQuery *)buildReplyQueryWhereFromUserProfileIsBlockedByUserProfile:(UFPFUserProfile *)userProfile;
 
 + (PFQuery *)buildReplyQueryWhereFromUserIsDeleted;
 

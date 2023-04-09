@@ -17,7 +17,7 @@
 @dynamic isDeleted;
 @dynamic content;
 @dynamic likeCount;
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toPost;
 @dynamic toReply;
 

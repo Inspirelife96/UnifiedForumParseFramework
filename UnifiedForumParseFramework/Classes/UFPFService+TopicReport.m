@@ -11,10 +11,10 @@
 
 @implementation UFPFService (TopicReport)
 
-+ (UFPFTopicReport *)addTopicReportFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic forReason:(UFPFParseReportReason)reason error:(NSError **)error {
++ (UFPFTopicReport *)addTopicReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic forReason:(UFPFParseReportReason)reason error:(NSError **)error {
     UFPFTopicReport *topicReport = [[UFPFTopicReport alloc] init];
     
-    topicReport.fromUser = fromUser;
+    topicReport.fromUserProfile = fromUserProfile;
     topicReport.toTopic = toTopic;
     topicReport.reason = @(reason);
     

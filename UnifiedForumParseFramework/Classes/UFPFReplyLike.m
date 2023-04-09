@@ -11,7 +11,7 @@
 
 @implementation UFPFReplyLike
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toReply;
 @dynamic isDeleted;
 

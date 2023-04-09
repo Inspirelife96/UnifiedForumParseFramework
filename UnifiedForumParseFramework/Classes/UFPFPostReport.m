@@ -11,7 +11,7 @@
 
 @implementation UFPFPostReport
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toPost;
 @dynamic reason;
 

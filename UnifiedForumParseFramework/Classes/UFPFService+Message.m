@@ -13,14 +13,14 @@
 
 @implementation UFPFService (Message)
 
-+ (NSArray<UFPFMessage *> *)findMessagesFromUser:(PFUser *)fromUser
-                                         toUser:(PFUser *)toUser
++ (NSArray<UFPFMessage *> *)findMessagesFromUserProfile:(UFPFUserProfile *)fromUserProfile
+                                         toUserProfile:(UFPFUserProfile *)toUserProfile
                                            page:(NSInteger)page
                                       pageCount:(NSInteger)pageCount
                                           error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFMessageKeyClass];
-    [query whereKey:UFPFMessageKeyFromUser equalTo:fromUser];
-    [query whereKey:UFPFMessageKeyToUser equalTo:toUser];
+    [query whereKey:UFPFMessageKeyFromUserProfile equalTo:fromUserProfile];
+    [query whereKey:UFPFMessageKeyToUserProfile equalTo:toUserProfile];
     
     [query orderByDescending:UFPFKeyCreatedAt];
     
@@ -30,10 +30,10 @@
     return [query findObjects:error];
 }
 
-+ (UFPFMessage *)addMessageFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser content:(NSString *)content error:(NSError **)error {
++ (UFPFMessage *)addMessageFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile content:(NSString *)content error:(NSError **)error {
     UFPFMessage *message = [[UFPFMessage alloc] init];
-    message.fromUser = fromUser;
-    message.toUser = toUser;
+    message.fromUserProfile = fromUserProfile;
+    message.toUserProfile = toUserProfile;
     message.content = content;
     
     BOOL succeeded = [message save:error];

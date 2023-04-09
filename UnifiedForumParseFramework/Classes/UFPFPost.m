@@ -21,7 +21,7 @@
 @dynamic replies;
 @dynamic replyCount;
 @dynamic likeCount;
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toTopic;
 
 + (NSString *)parseClassName {

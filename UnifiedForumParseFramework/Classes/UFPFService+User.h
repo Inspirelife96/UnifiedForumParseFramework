@@ -83,9 +83,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)unsubscribe:(NSError **)error;
 
 
-+ (PFQuery *)buildUserQueryWhereUserIsDeleted;
-
-+ (PFQuery *)buildUserQueryWhereUserIsLocked;
 
 @end
 

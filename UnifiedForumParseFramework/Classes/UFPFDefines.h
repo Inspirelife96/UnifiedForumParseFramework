@@ -12,43 +12,6 @@ typedef NS_ENUM(NSInteger, UFPFErrorCode) {
     kUFPFErrorUserIsDeleted = 1001,
 };
 
-//typedef NS_ENUM(NSInteger, UFPFTimeLineType) {
-//    UFPFTimeLineTypeLikeTopic = 0,
-//    UFPFTimeLineTypeLikePost = 1,
-//    UFPFTimeLineTypeLikeReply = 2,
-//    UFPFTimeLineTypePost = 3,
-//    UFPFTimeLineTypeReply = 4,
-//    UFPFTimeLineTypeFollow = 5,
-//};
-
-//typedef NS_ENUM(NSInteger, UFPFParseRecordStatus) {
-//    UFPFParseRecordStatusPrivate = 0,
-//    UFPFParseRecordStatusPublic = 1,
-//    UFPFParseRecordStatusBanned = 2
-//};
-
-//typedef NS_ENUM(NSInteger, UFPFParseActivityType) {
-//    UFPFParseActivityTypeAddPost = 100,
-//    UFPFParseActivityTypeAddLike = 200,
-//    UFPFParseActivityTypeAddShare = 300,
-//    UFPFParseActivityTypeAddFollow = 400,
-//    UFPFParseActivityTypeAddReply = 500,
-//
-//    UFPFParseActivityTypeAddTopic = 1000,
-//    UFPFParseActivityTypePublicTopic = 1001,
-//    UFPFParseActivityTypeBanTopic = 1002,
-//};
-
-//typedef NS_ENUM(NSInteger, UFPFParseReportType) {
-//    UFPFParseReportTypeTopic = 0,
-//    UFPFParseReportTypePost = 1
-//};
-
-//typedef NS_ENUM(NSInteger, UFPFParseLikeType) {
-//    UFPFParseLikeTypeTopic = 0,
-//    UFPFParseLikeTypePost = 1
-//};
-
 typedef NS_ENUM(NSInteger, UFPFParseReportReason) {
     UFPFParseReportReasonPornography = 0,
     UFPFParseReportReasonIllegal = 1,
@@ -64,7 +27,6 @@ extern NSString *const UFPFTimeLineTypeLikeTopic;
 extern NSString *const UFPFTimeLineTypeLikePost;
 extern NSString *const UFPFTimeLineTypeLikeReply;
 extern NSString *const UFPFTimeLineTypeFollow;
-//extern NSString *const UFPFTimeLineTypeUnfollow;
 
 extern NSString *const UFPFNotificationTypeComment;
 extern NSString *const UFPFNotificationTypeLike;
@@ -132,15 +94,8 @@ extern NSString *const PFUserKeyClass;
 //extern NSString *const PFUserKeyEmail;
 
 // 自定义字段
-extern NSString *const UFPFUserKeyIsLocked;
-extern NSString *const UFPFUserKeyIsDeleted;
-extern NSString *const UFPFUserKeyStatisticsInfo;
-extern NSString *const UFPFUserKeyAvatar;
-extern NSString *const UFPFUserKeyBackgroundImage;
-extern NSString *const UFPFUserKeyBio;
-extern NSString *const UFPFUserKeyBadgeCount;
-extern NSString *const UFPFUserKeyPreferredLanguage;
-
+extern NSString *const UFPFUserKeyUserProfile; // 用户的展示信息
+extern NSString *const UFPFUserKeyBadgeCount; // 推送统计
 
 # pragma mark - Topics 表
 
@@ -163,7 +118,7 @@ extern NSString *const UFPFTopicKeyTitle; // 标题 （NSString）
 extern NSString *const UFPFTopicKeyContent; // 内容（NSString）
 extern NSString *const UFPFTopicKeyMediaFileObjects; // 图片，可多图 (NSArray<PFFile *>)
 extern NSString *const UFPFTopicKeyMediaFileType;
-extern NSString *const UFPFTopicKeyFromUser; // 创建者（PFUser）
+extern NSString *const UFPFTopicKeyFromUserProfile; // 创建者（PFUser）
 
 // 统计字段：
 extern NSString *const UFPFTopicKeyPostCount; // 回帖数（NSNumber）
@@ -201,7 +156,7 @@ extern NSString *const UFPFPostKeyReplyCount;
 extern NSString *const UFPFPostLikeKeyCount;
 
 // 关系
-extern NSString *const UFPFPostKeyFromUser;
+extern NSString *const UFPFPostKeyFromUserProfile;
 extern NSString *const UFPFPostKeyToTopic;
 
 # pragma mark - Replies 表
@@ -225,7 +180,7 @@ extern NSString *const UFPFReplyKeyContent;
 extern NSString *const UFPFReplyLikeKeyCount;
 
 // 关系
-extern NSString *const UFPFReplyKeyFromUser;
+extern NSString *const UFPFReplyKeyFromUserProfile;
 extern NSString *const UFPFReplyKeyToPost;
 extern NSString *const UFPFReplyKeyToReply;
 
@@ -257,7 +212,7 @@ extern NSString *const UFPFTagKeyName;
 extern NSString *const UFPFTopicLikeKeyClass;
 
 // Field keys
-extern NSString *const UFPFTopicLikeKeyFromUser;
+extern NSString *const UFPFTopicLikeKeyFromUserProfile;
 extern NSString *const UFPFTopicLikeKeyToTopic;
 extern NSString *const UFPFTopicLikeKeyIsDeleted;
 
@@ -269,7 +224,7 @@ extern NSString *const UFPFTopicLikeKeyIsDeleted;
 extern NSString *const UFPFPostLikeKeyClass;
 
 // Field keys
-extern NSString *const UFPFPostLikeKeyFromUser;
+extern NSString *const UFPFPostLikeKeyFromUserProfile;
 extern NSString *const UFPFPostLikeKeyToPost;
 extern NSString *const UFPFPostLikeKeyIsDeleted;
 
@@ -281,7 +236,7 @@ extern NSString *const UFPFPostLikeKeyIsDeleted;
 extern NSString *const UFPFReplyLikeKeyClass;
 
 // Field keys
-extern NSString *const UFPFReplyLikeKeyFromUser;
+extern NSString *const UFPFReplyLikeKeyFromUserProfile;
 extern NSString *const UFPFReplyLikeKeyToReply;
 extern NSString *const UFPFReplyLikeKeyIsDeleted;
 
@@ -293,7 +248,7 @@ extern NSString *const UFPFReplyLikeKeyIsDeleted;
 extern NSString *const UFPFTopicReportKeyClass;
 
 // Field keys
-extern NSString *const UFPFTopicReportKeyFromUser;
+extern NSString *const UFPFTopicReportKeyFromUserProfile;
 extern NSString *const UFPFTopicReportKeyToTopic;
 
 # pragma mark - PostReports 表
@@ -304,7 +259,7 @@ extern NSString *const UFPFTopicReportKeyToTopic;
 extern NSString *const UFPFPostReportKeyClass;
 
 // Field keys
-extern NSString *const UFPFPostReportKeyFromUser;
+extern NSString *const UFPFPostReportKeyFromUserProfile;
 extern NSString *const UFPFPostReportKeyToPost;
 
 # pragma mark - ReplyReports 表
@@ -315,7 +270,7 @@ extern NSString *const UFPFPostReportKeyToPost;
 extern NSString *const UFPFReplyReportKeyClass;
 
 // Field keys
-extern NSString *const UFPFReplyReportKeyFromUser;
+extern NSString *const UFPFReplyReportKeyFromUserProfile;
 extern NSString *const UFPFReplyReportKeyToReply;
 
 
@@ -328,7 +283,7 @@ extern NSString *const UFPFShareKeyClass;
 
 // Field keys
 extern NSString *const UFPFShareKeyTopic; // 分享的Topic
-extern NSString *const UFPFShareKeyFromUser; // 谁分享的
+extern NSString *const UFPFShareKeyFromUserProfile; // 谁分享的
 extern NSString *const UFPFShareKeyToPlatform; // 分享到什么地方了
 
 # pragma mark - Follows 表
@@ -339,8 +294,8 @@ extern NSString *const UFPFShareKeyToPlatform; // 分享到什么地方了
 extern NSString *const UFPFFollowKeyClass;
 
 // Field keys
-extern NSString *const UFPFFollowKeyFromUser; // 关注
-extern NSString *const UFPFFollowKeyToUser; // 被关注
+extern NSString *const UFPFFollowKeyFromUserProfile; // 关注
+extern NSString *const UFPFFollowKeyToUserProfile; // 被关注
 extern NSString *const UFPFFollowKeyIsDeleted;
 
 
@@ -352,8 +307,8 @@ extern NSString *const UFPFFollowKeyIsDeleted;
 extern NSString *const UFPFBlockKeyClass;
 
 // Field keys
-extern NSString *const UFPFBlockKeyFromUser; // 发起者
-extern NSString *const UFPFBlockKeyToUser; // 黑名单用户
+extern NSString *const UFPFBlockKeyFromUserProfile; // 发起者
+extern NSString *const UFPFBlockKeyToUserProfile; // 黑名单用户
 
 
 # pragma mark - TimeLine 表
@@ -363,30 +318,38 @@ extern NSString *const UFPFBlockKeyToUser; // 黑名单用户
 // Class key
 extern NSString *const UFPFTimeLineKeyClass;
 
-extern NSString *const UFPFTimeLineKeyFromUser; // 消息发送者
-extern NSString *const UFPFTimeLineKeyToUser; // 消息接受者
+extern NSString *const UFPFTimeLineKeyFromUserProfile; // 消息发送者
+extern NSString *const UFPFTimeLineKeyToUserProfile; // 消息接受者
 extern NSString *const UFPFTimeLineKeyType;
 extern NSString *const UFPFTimeLineKeyTopic;
 extern NSString *const UFPFTimeLineKeyPost;
 extern NSString *const UFPFTimeLineKeyReply;
 extern NSString *const UFPFTimeLineKeyIsDeleted;
 
-# pragma mark - StatisticsInfos 表
+# pragma mark - UserProfile 表
 
-// StatisticsInfos表 User表创建StatisticsInfo字段和其关联，方便读取用户的关注/粉丝/Topic数/获得的赞等统计记录记录。
+// UserProfile表
+// Parse Server提供的“_User”表，由于安全原因，不能读取，因此创建一个UserProfile表，来保存用户的一些可以展示的内容。
+// UserProfile字段在用户创建时创建，并和系统的“_User”表关联。
 
 // Class key
-extern NSString *const UFPFStatisticsInfoKeyClass;
+extern NSString *const UFPFUserProfileKeyClass;
 
 // Field keys
-extern NSString *const UFPFStatisticsInfoKeyUser; // 用户
-extern NSString *const UFPFStatisticsInfoKeyProfileviews; // 用户
-extern NSString *const UFPFStatisticsInfoKeyReputation; // 用户
-extern NSString *const UFPFStatisticsInfoKeyTopicCount; // 用户
-extern NSString *const UFPFStatisticsInfoKeyPostCount; // 用户
-extern NSString *const UFPFStatisticsInfoKeyFollowerCount; // 关注
-extern NSString *const UFPFStatisticsInfoKeyFollowingCount; // 粉丝
-extern NSString *const UFPFStatisticsInfoKeyLikedCount; // 获赞数
+extern NSString *const UFPFUserProfileKeyUser; // 关联"_User"表
+extern NSString *const UFPFUserProfileKeyIsLocked; // 标记该账户是否被锁定，由管理员锁定
+extern NSString *const UFPFUserProfileKeyIsDeleted; // 标记该用户是否被删除，由用户自己删除
+extern NSString *const UFPFUserProfileKeyAvatar; // 用户头像
+extern NSString *const UFPFUserProfileKeyBackgroundImage; //用户背景
+extern NSString *const UFPFUserProfileKeyBio; // 个性签名
+extern NSString *const UFPFUserProfileKeyPreferredLanguage; // 喜欢的语言
+extern NSString *const UFPFUserProfileKeyProfileviews; // 统计信息：被浏览次数
+extern NSString *const UFPFUserProfileKeyReputation; // 统计信息：荣誉值
+extern NSString *const UFPFUserProfileKeyTopicCount; // 统计信息：发帖数量
+extern NSString *const UFPFUserProfileKeyPostCount; // 统计信息：回复数量
+extern NSString *const UFPFUserProfileKeyFollowerCount; // 统计信息：粉丝
+extern NSString *const UFPFUserProfileKeyFollowingCount; // 统计信息：关注
+extern NSString *const UFPFUserProfileKeyLikedCount; // 统计信息：被赞数量
 
 # pragma mark - Notification 表
 
@@ -395,8 +358,8 @@ extern NSString *const UFPFNotificationKeyClass;
 
 // Field keys
 
-extern NSString *const UFPFNotificationKeyFromUser;
-extern NSString *const UFPFNotificationKeyToUser;
+extern NSString *const UFPFNotificationKeyFromUserProfile;
+extern NSString *const UFPFNotificationKeyToUserProfile;
 extern NSString *const UFPFNotificationKeyType;
 extern NSString *const UFPFNotificationKeySubType;
 extern NSString *const UFPFNotificationKeyTopic;
@@ -427,8 +390,8 @@ extern NSString *const UFPFNotificationCountKeyOtherCount;
 extern NSString *const UFPFMessageKeyClass;
 
 // Field keys
-extern NSString *const UFPFMessageKeyFromUser;
-extern NSString *const UFPFMessageKeyToUser;
+extern NSString *const UFPFMessageKeyFromUserProfile;
+extern NSString *const UFPFMessageKeyToUserProfile;
 extern NSString *const UFPFMessageKeyContent;
 
 
@@ -440,8 +403,8 @@ extern NSString *const UFPFMessageKeyContent;
 extern NSString *const UFPFMessageGroupKeyClass;
 
 // Field keys
-extern NSString *const UFPFMessageGroupKeyFromUser;
-extern NSString *const UFPFMessageGroupKeyToUser;
+extern NSString *const UFPFMessageGroupKeyFromUserProfile;
+extern NSString *const UFPFMessageGroupKeyToUserProfile;
 extern NSString *const UFPFMessageGroupKeyLastMessage;
 extern NSString *const UFPFMessageGroupKeyUnreadMessageCount;
 

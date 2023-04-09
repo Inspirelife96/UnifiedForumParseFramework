@@ -13,8 +13,8 @@
 
 @implementation UFPFNotification
 
-@dynamic fromUser;
-@dynamic toUser;
+@dynamic fromUserProfile;
+@dynamic toUserProfile;
 @dynamic type;
 @dynamic subType;
 @dynamic topic;

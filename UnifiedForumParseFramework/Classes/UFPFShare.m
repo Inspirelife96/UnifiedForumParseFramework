@@ -14,7 +14,7 @@
 @implementation UFPFShare
 
 @dynamic topic;
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toPlatform;
 
 + (NSString *)parseClassName {

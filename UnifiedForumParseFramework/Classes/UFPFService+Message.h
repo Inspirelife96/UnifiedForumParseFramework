@@ -10,16 +10,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFMessage;
+@class UFPFUserProfile;
 
 @interface UFPFService (Message)
 
-+ (NSArray<UFPFMessage *> *)findMessagesFromUser:(PFUser *)fromUser
-                                         toUser:(PFUser *)toUser
++ (NSArray<UFPFMessage *> *)findMessagesFromUserProfile:(UFPFUserProfile *)fromUserProfile
+                                         toUserProfile:(UFPFUserProfile *)toUserProfile
                                            page:(NSInteger)page
                                       pageCount:(NSInteger)pageCount
                                           error:(NSError **)error;
 
-+ (UFPFMessage *)addMessageFromUser:(PFUser *)fromUser toUser:(PFUser *)toUser content:(NSString *)content error:(NSError **)error;
++ (UFPFMessage *)addMessageFromUserProfile:(UFPFUserProfile *)fromUserProfile toUserProfile:(UFPFUserProfile *)toUserProfile content:(NSString *)content error:(NSError **)error;
 
 @end
 

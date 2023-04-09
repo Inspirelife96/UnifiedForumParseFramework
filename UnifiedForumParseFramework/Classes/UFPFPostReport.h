@@ -10,10 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFPost;
+@class UFPFUserProfile;
 
 @interface UFPFPostReport : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFPost *toPost;
 @property (nonatomic, strong) NSNumber *reason;
 

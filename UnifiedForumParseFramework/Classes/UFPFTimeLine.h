@@ -10,13 +10,14 @@
 @class UFPFTopic;
 @class UFPFPost;
 @class UFPFReply;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFTimeLine : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
-@property (nonatomic, strong) PFUser *toUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
+@property (nonatomic, strong) UFPFUserProfile *toUserProfile;
 
 @property (nonatomic, strong) NSString *type;
 

@@ -40,19 +40,21 @@
 #import "UFPFService+ReplyReport.h"
 #import "UFPFService+Session.h"
 #import "UFPFService+Share.h"
+#import "UFPFService+Tag.h"
 #import "UFPFService+TimeLine.h"
 #import "UFPFService+Topic.h"
 #import "UFPFService+TopicLike.h"
 #import "UFPFService+TopicReport.h"
 #import "UFPFService+User.h"
+#import "UFPFService+UserProfile.h"
 #import "UFPFService.h"
 #import "UFPFShare.h"
-#import "UFPFStatisticsInfo.h"
 #import "UFPFTag.h"
 #import "UFPFTimeLine.h"
 #import "UFPFTopic.h"
 #import "UFPFTopicLike.h"
 #import "UFPFTopicReport.h"
+#import "UFPFUserProfile.h"
 
 FOUNDATION_EXPORT double UnifiedForumParseFrameworkVersionNumber;
 FOUNDATION_EXPORT const unsigned char UnifiedForumParseFrameworkVersionString[];

@@ -13,49 +13,49 @@
 
 @implementation UFPFService (Notification)
 
-+ (NSArray<UFPFNotification *> *)findCommentNotificationToUser:(PFUser *)toUser
-                                                         page:(NSInteger)page
-                                                    pageCount:(NSInteger)pageCount
-                                                        error:(NSError **)error {
-    return [UFPFService queryNotificationToUser:toUser type:UFPFNotificationTypeComment page:page pageCount:pageCount error:error];
++ (NSArray<UFPFNotification *> *)findCommentNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                 page:(NSInteger)page
+                                                            pageCount:(NSInteger)pageCount
+                                                                error:(NSError **)error {
+    return [UFPFService queryNotificationToUserProfile:toUserProfile type:UFPFNotificationTypeComment page:page pageCount:pageCount error:error];
 }
 
-+ (NSArray<UFPFNotification *> *)findLikeNotificationToUser:(PFUser *)toUser
-                                                     page:(NSInteger)page
-                                                 pageCount:(NSInteger)pageCount
-                                                     error:(NSError **)error {
-    return [UFPFService queryNotificationToUser:toUser type:UFPFNotificationTypeLike page:page pageCount:pageCount error:error];
++ (NSArray<UFPFNotification *> *)findLikeNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                              page:(NSInteger)page
+                                                         pageCount:(NSInteger)pageCount
+                                                             error:(NSError **)error {
+    return [UFPFService queryNotificationToUserProfile:toUserProfile type:UFPFNotificationTypeLike page:page pageCount:pageCount error:error];
 }
 
-+ (NSArray<UFPFNotification *> *)findFollowNotificationToUser:(PFUser *)toUser
-                                                        page:(NSInteger)page
-                                                   pageCount:(NSInteger)pageCount
-                                                       error:(NSError **)error {
-    return [UFPFService queryNotificationToUser:toUser type:UFPFNotificationTypeFollow page:page pageCount:pageCount error:error];
++ (NSArray<UFPFNotification *> *)findFollowNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                page:(NSInteger)page
+                                                           pageCount:(NSInteger)pageCount
+                                                               error:(NSError **)error {
+    return [UFPFService queryNotificationToUserProfile:toUserProfile type:UFPFNotificationTypeFollow page:page pageCount:pageCount error:error];
 }
 
-+ (NSArray<UFPFNotification *> *)findMessageGroupNotificationToUser:(PFUser *)toUser
-                                                         page:(NSInteger)page
-                                                    pageCount:(NSInteger)pageCount
-                                                        error:(NSError **)error {
-    return [UFPFService queryNotificationToUser:toUser type:UFPFNotificationTypeMessage page:page pageCount:pageCount error:error];
++ (NSArray<UFPFNotification *> *)findMessageGroupNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                                      page:(NSInteger)page
+                                                                 pageCount:(NSInteger)pageCount
+                                                                     error:(NSError **)error {
+    return [UFPFService queryNotificationToUserProfile:toUserProfile type:UFPFNotificationTypeMessage page:page pageCount:pageCount error:error];
 }
 
-+ (NSArray<UFPFNotification *> *)findOtherNotificationToUser:(PFUser *)toUser
-                                                       page:(NSInteger)page
-                                                  pageCount:(NSInteger)pageCount
-                                                      error:(NSError **)error {
-    return [UFPFService queryNotificationToUser:toUser type:UFPFNotificationTypeOther page:page pageCount:pageCount error:error];
++ (NSArray<UFPFNotification *> *)findOtherNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                               page:(NSInteger)page
+                                                          pageCount:(NSInteger)pageCount
+                                                              error:(NSError **)error {
+    return [UFPFService queryNotificationToUserProfile:toUserProfile type:UFPFNotificationTypeOther page:page pageCount:pageCount error:error];
 }
 
 
-+ (NSArray<UFPFNotification *> *)queryNotificationToUser:(PFUser *)toUser
-                                                   type:(NSString *)type
-                                                   page:(NSInteger)page
-                                              pageCount:(NSInteger)pageCount
-                                                  error:(NSError **)error {
++ (NSArray<UFPFNotification *> *)queryNotificationToUserProfile:(UFPFUserProfile *)toUserProfile
+                                                           type:(NSString *)type
+                                                           page:(NSInteger)page
+                                                      pageCount:(NSInteger)pageCount
+                                                          error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFNotificationKeyClass];
-    [query whereKey:UFPFNotificationKeyToUser equalTo:toUser];
+    [query whereKey:UFPFNotificationKeyToUserProfile equalTo:toUserProfile];
     [query whereKey:UFPFNotificationKeyType equalTo:type];
     
     [query orderByDescending:UFPFKeyUpdatedAt];
@@ -66,19 +66,19 @@
     return [query findObjects:error];
 }
 
-+ (BOOL)addNotificationFromUser:(PFUser *)fromUser
-                         toUser:(PFUser *)toUser
-                           type:(NSString *)type
-                        subType:(NSString *)subType
-                          topic:(UFPFTopic * _Nullable)topic
-                           post:(UFPFPost * _Nullable)post
-                          reply:(UFPFReply * _Nullable)reply
-                   messageGroup:(UFPFMessageGroup * _Nullable)messageGroup
-                          error:(NSError **)error {
++ (BOOL)addNotificationFromUserProfile:(UFPFUserProfile *)fromUserProfile
+                         toUserProfile:(UFPFUserProfile *)toUserProfile
+                                  type:(NSString *)type
+                               subType:(NSString *)subType
+                                 topic:(UFPFTopic * _Nullable)topic
+                                  post:(UFPFPost * _Nullable)post
+                                 reply:(UFPFReply * _Nullable)reply
+                          messageGroup:(UFPFMessageGroup * _Nullable)messageGroup
+                                 error:(NSError **)error {
     UFPFNotification *notification = [[UFPFNotification alloc] init];
     
-    notification.fromUser = fromUser;
-    notification.toUser = toUser;
+    notification.fromUserProfile = fromUserProfile;
+    notification.toUserProfile = toUserProfile;
     notification.type = type;
     notification.subType = subType;
     

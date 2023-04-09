@@ -13,10 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFPost;
 @class UFPFPostReport;
+@class UFPFUserProfile;
 
 @interface UFPFService (PostReport)
 
-+ (UFPFPostReport *)addPostReportFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost forReason:(UFPFParseReportReason)reason error:(NSError **)error;
++ (UFPFPostReport *)addPostReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost forReason:(UFPFParseReportReason)reason error:(NSError **)error;
 
 @end
 

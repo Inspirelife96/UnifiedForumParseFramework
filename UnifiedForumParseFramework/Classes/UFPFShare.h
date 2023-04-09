@@ -10,11 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFTopic;
+@class UFPFUserProfile;
 
 @interface UFPFShare : PFObject <PFSubclassing>
 
 @property (nonatomic, strong) UFPFTopic *topic;
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, copy) NSString *toPlatform;
 
 @end

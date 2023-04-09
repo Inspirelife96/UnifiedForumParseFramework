@@ -9,6 +9,8 @@
 
 #import "UFPFDefines.h"
 
+@class UFPFUserProfile;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFTopic;
@@ -16,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFService (TopicReport)
 
-+ (UFPFTopicReport *)addTopicReportFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic forReason:(UFPFParseReportReason)reason error:(NSError **)error;
++ (UFPFTopicReport *)addTopicReportFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic forReason:(UFPFParseReportReason)reason error:(NSError **)error;
 
 @end
 

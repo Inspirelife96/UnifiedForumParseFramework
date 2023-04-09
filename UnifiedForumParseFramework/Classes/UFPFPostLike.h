@@ -10,10 +10,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFPost;
+@class UFPFUserProfile;
+
 
 @interface UFPFPostLike : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFPost *toPost;
 @property (nonatomic, assign) BOOL isDeleted;
 

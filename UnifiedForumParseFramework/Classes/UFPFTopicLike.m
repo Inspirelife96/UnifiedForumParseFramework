@@ -11,7 +11,7 @@
 
 @implementation UFPFTopicLike
 
-@dynamic fromUser;
+@dynamic fromUserProfile;
 @dynamic toTopic;
 @dynamic isDeleted;
 

@@ -18,7 +18,7 @@
                                       pageCount:(NSInteger)pageCount
                                           error:(NSError **)error {
     PFQuery *query = [PFQuery queryWithClassName:UFPFTimeLineKeyClass];
-    [query whereKey:UFPFTimeLineKeyFromUser equalTo:user];
+    [query whereKey:UFPFTimeLineKeyFromUserProfile equalTo:user];
     [query whereKey:UFPFPostKeyIsDeleted equalTo:@(NO)];
     
     [query orderByDescending:UFPFKeyCreatedAt];

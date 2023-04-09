@@ -84,14 +84,18 @@ NSString *const PFUserKeyClass = @"_User";
 //NSString *const PFUserKeyEmail = @"email";
 
 // 自定义字段
-NSString *const UFPFUserKeyIsLocked = @"isLocked";
-NSString *const UFPFUserKeyIsDeleted = @"isDeleted";
-NSString *const UFPFUserKeyStatisticsInfo = @"statisticsInfo";
-NSString *const UFPFUserKeyAvatar = @"avatar";
-NSString *const UFPFUserKeyBackgroundImage = @"backgroundImage";
-NSString *const UFPFUserKeyBio = @"bio";
-NSString *const UFPFUserKeyBadgeCount = @"badgeCount";
-NSString *const UFPFUserKeyPreferredLanguage = @"preferredLanguage";
+NSString *const UFPFUserKeyUserProfile = @"userProfile"; // 用户的展示信息
+NSString *const UFPFUserKeyBadgeCount = @"badgeCount"; // 推送统计
+
+
+NSString *const UFPFUserProfileKeyIsLocked = @"isLocked";
+NSString *const UFPFUserProfileKeyIsDeleted = @"isDeleted";
+NSString *const UFPFUserProfileKeyStatisticsInfo = @"statisticsInfo";
+NSString *const UFPFUserProfileKeyAvatar = @"avatar";
+NSString *const UFPFUserProfileKeyBackgroundImage = @"backgroundImage";
+NSString *const UFPFUserProfileKeyBio = @"bio";
+NSString *const UFPFUserProfileKeyBadgeCount = @"badgeCount";
+NSString *const UFPFUserProfileKeyPreferredLanguage = @"preferredLanguage";
 
 # pragma mark - Topics 表
 
@@ -114,7 +118,7 @@ NSString *const UFPFTopicKeyTitle = @"title"; // 标题 （NSString）
 NSString *const UFPFTopicKeyContent = @"comtent"; // 内容（NSString）
 NSString *const UFPFTopicKeyMediaFileObjects = @"mediaFileObjects"; // 图片，可多图 (NSArray<PFFile *>)
 NSString *const UFPFTopicKeyMediaFileType = @"mediaFileType";
-NSString *const UFPFTopicKeyFromUser = @"fromUser"; // 创建者（PFUser）
+NSString *const UFPFTopicKeyFromUserProfile = @"fromUserProfile"; // 创建者（PFUser）
 
 // 统计字段：
 NSString *const UFPFTopicKeyPostCount = @"postCount"; // 回帖数（NSNumber）
@@ -150,7 +154,7 @@ NSString *const UFPFPostKeyReplyCount = @"replyCount";
 NSString *const UFPFPostLikeKeyCount = @"likeCount";
 
 // 关系
-NSString *const UFPFPostKeyFromUser = @"fromUser";
+NSString *const UFPFPostKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFPostKeyToTopic = @"toTopic";
 
 # pragma mark - Replies 表
@@ -174,7 +178,7 @@ NSString *const UFPFReplyKeyContent = @"content";
 NSString *const UFPFReplyLikeKeyCount = @"likeCount";
 
 // 关系
-NSString *const UFPFReplyKeyFromUser = @"fromUser";
+NSString *const UFPFReplyKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFReplyKeyToPost = @"toPost";
 NSString *const UFPFReplyKeyToReply = @"toReply";
 
@@ -206,7 +210,7 @@ NSString *const UFPFTagKeyName = @"name";
 NSString *const UFPFTopicLikeKeyClass = @"TopicLike";
 
 // Field keys
-NSString *const UFPFTopicLikeKeyFromUser = @"fromUser";
+NSString *const UFPFTopicLikeKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFTopicLikeKeyToTopic = @"toTopic";
 NSString *const UFPFTopicLikeKeyIsDeleted = @"isDeleted";
 
@@ -218,7 +222,7 @@ NSString *const UFPFTopicLikeKeyIsDeleted = @"isDeleted";
 NSString *const UFPFPostLikeKeyClass = @"PostLike";
 
 // Field keys
-NSString *const UFPFPostLikeKeyFromUser = @"fromUser";
+NSString *const UFPFPostLikeKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFPostLikeKeyToPost = @"toPost";
 NSString *const UFPFPostLikeKeyIsDeleted = @"isDeleted";
 
@@ -230,7 +234,7 @@ NSString *const UFPFPostLikeKeyIsDeleted = @"isDeleted";
 NSString *const UFPFReplyLikeKeyClass = @"ReplyLike";
 
 // Field keys
-NSString *const UFPFReplyLikeKeyFromUser = @"fromUser";
+NSString *const UFPFReplyLikeKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFReplyLikeKeyToReply = @"toReply";
 NSString *const UFPFReplyLikeKeyIsDeleted = @"isDeleted";
 
@@ -242,7 +246,7 @@ NSString *const UFPFReplyLikeKeyIsDeleted = @"isDeleted";
 NSString *const UFPFTopicReportKeyClass = @"TopicReport";
 
 // Field keys
-NSString *const UFPFTopicReportKeyFromUser = @"fromUser";
+NSString *const UFPFTopicReportKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFTopicReportKeyToTopic = @"toTopic";
 
 # pragma mark - PostReports 表
@@ -253,7 +257,7 @@ NSString *const UFPFTopicReportKeyToTopic = @"toTopic";
 NSString *const UFPFPostReportKeyClass = @"PostReport";
 
 // Field keys
-NSString *const UFPFPostReportKeyFromUser = @"fromUser";
+NSString *const UFPFPostReportKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFPostReportKeyToPost = @"toPost";
 
 # pragma mark - ReplyReports 表
@@ -264,7 +268,7 @@ NSString *const UFPFPostReportKeyToPost = @"toPost";
 NSString *const UFPFReplyReportKeyClass = @"ReplyReport";
 
 // Field keys
-NSString *const UFPFReplyReportKeyFromUser = @"fromUser";
+NSString *const UFPFReplyReportKeyFromUserProfile = @"fromUserProfile";
 NSString *const UFPFReplyReportKeyToReply = @"toReply";
 
 
@@ -277,7 +281,7 @@ NSString *const UFPFShareKeyClass = @"Share";
 
 // Field keys
 NSString *const UFPFShareKeyTopic = @"topic"; // 分享的Topic
-NSString *const UFPFShareKeyFromUser = @"fromUser"; // 谁分享的
+NSString *const UFPFShareKeyFromUserProfile = @"fromUserProfile"; // 谁分享的
 NSString *const UFPFShareKeyToPlatform = @"toPlatform"; // 分享到什么地方了
 
 # pragma mark - Follows 表
@@ -288,8 +292,8 @@ NSString *const UFPFShareKeyToPlatform = @"toPlatform"; // 分享到什么地方
 NSString *const UFPFFollowKeyClass = @"Follow";
 
 // Field keys
-NSString *const UFPFFollowKeyFromUser = @"fromUser"; // 关注
-NSString *const UFPFFollowKeyToUser = @"toUser"; // 被关注
+NSString *const UFPFFollowKeyFromUserProfile = @"fromUserProfile"; // 关注
+NSString *const UFPFFollowKeyToUserProfile = @"toUser"; // 被关注
 NSString *const UFPFFollowKeyIsDeleted = @"isDeleted"; // 被关注
 
 
@@ -301,8 +305,8 @@ NSString *const UFPFFollowKeyIsDeleted = @"isDeleted"; // 被关注
 NSString *const UFPFBlockKeyClass = @"Block";
 
 // Field keys
-NSString *const UFPFBlockKeyFromUser = @"fromUser"; // 发起者
-NSString *const UFPFBlockKeyToUser = @"toUser"; // 黑名单用户
+NSString *const UFPFBlockKeyFromUserProfile = @"fromUserProfile"; // 发起者
+NSString *const UFPFBlockKeyToUserProfile = @"toUser"; // 黑名单用户
 
 
 # pragma mark - Notifications 表
@@ -312,8 +316,8 @@ NSString *const UFPFBlockKeyToUser = @"toUser"; // 黑名单用户
 // Class key
 NSString *const UFPFTimeLineKeyClass = @"TimeLine";
 
-NSString *const UFPFTimeLineKeyFromUser = @"fromUser"; // 消息发送者
-NSString *const UFPFTimeLineKeyToUser = @"toUser"; // 消息接受者
+NSString *const UFPFTimeLineKeyFromUserProfile = @"fromUserProfile"; // 消息发送者
+NSString *const UFPFTimeLineKeyToUserProfile = @"toUser"; // 消息接受者
 NSString *const UFPFTimeLineKeyType = @"type";
 NSString *const UFPFTimeLineKeyTopic = @"topic";
 NSString *const UFPFTimeLineKeyPost = @"post";
@@ -326,17 +330,17 @@ NSString *const UFPFTimeLineKeyIsDeleted = @"isDeleted";
 // StatisticsInfos表 User表创建StatisticsInfo字段和其关联，方便读取用户的关注/粉丝/Topic数/获得的赞等统计记录记录。
 
 // Class key
-NSString *const UFPFStatisticsInfoKeyClass = @"StatisticsInfo";
+NSString *const UFPFUserProfileKeyClass = @"StatisticsInfo";
 
 // Field keys
-NSString *const UFPFStatisticsInfoKeyUser = @"user"; // 用户
-NSString *const UFPFStatisticsInfoKeyProfileviews = @"profileViews"; // 用户
-NSString *const UFPFStatisticsInfoKeyReputation = @"reputation"; // 用户
-NSString *const UFPFStatisticsInfoKeyTopicCount = @"topicCount"; // 用户
-NSString *const UFPFStatisticsInfoKeyPostCount = @"postCount"; // 用户
-NSString *const UFPFStatisticsInfoKeyFollowerCount = @"followerCount"; // 粉丝
-NSString *const UFPFStatisticsInfoKeyFollowingCount = @"followingCount"; // 关注
-NSString *const UFPFStatisticsInfoKeyLikedCount = @"likedCount"; // 获赞数
+NSString *const UFPFUserProfileKeyUser = @"user"; // 用户
+NSString *const UFPFUserProfileKeyProfileviews = @"profileViews"; // 用户
+NSString *const UFPFUserProfileKeyReputation = @"reputation"; // 用户
+NSString *const UFPFUserProfileKeyTopicCount = @"topicCount"; // 用户
+NSString *const UFPFUserProfileKeyPostCount = @"postCount"; // 用户
+NSString *const UFPFUserProfileKeyFollowerCount = @"followerCount"; // 粉丝
+NSString *const UFPFUserProfileKeyFollowingCount = @"followingCount"; // 关注
+NSString *const UFPFUserProfileKeyLikedCount = @"likedCount"; // 获赞数
 
 
 # pragma mark - Notification 表
@@ -346,8 +350,8 @@ NSString *const UFPFNotificationKeyClass = @"Notification";
 
 // Field keys
 
-NSString *const UFPFNotificationKeyFromUser = @"fromUser";
-NSString *const UFPFNotificationKeyToUser = @"toUser";
+NSString *const UFPFNotificationKeyFromUserProfile = @"fromUserProfile";
+NSString *const UFPFNotificationKeyToUserProfile = @"toUser";
 NSString *const UFPFNotificationKeyType = @"type";
 NSString *const UFPFNotificationKeySubType = @"subType";
 NSString *const UFPFNotificationKeyTopic = @"topic";
@@ -363,8 +367,8 @@ NSString *const UFPFNotificationKeyMessage = @"message";
 NSString *const UFPFMessageKeyClass = @"Message";
 
 // Field keys
-NSString *const UFPFMessageKeyFromUser = @"fromUser"; // 用户
-NSString *const UFPFMessageKeyToUser = @"toUser"; // 用户
+NSString *const UFPFMessageKeyFromUserProfile = @"fromUserProfile"; // 用户
+NSString *const UFPFMessageKeyToUserProfile = @"toUser"; // 用户
 NSString *const UFPFMessageKeyContent = @"content"; // 用户
 
 
@@ -376,8 +380,8 @@ NSString *const UFPFMessageKeyContent = @"content"; // 用户
 NSString *const UFPFMessageGroupKeyClass = @"MessageGroup";
 
 // Field keys
-NSString *const UFPFMessageGroupKeyFromUser = @"fromUser";
-NSString *const UFPFMessageGroupKeyToUser = @"toUser";
+NSString *const UFPFMessageGroupKeyFromUserProfile = @"fromUserProfile";
+NSString *const UFPFMessageGroupKeyToUserProfile = @"toUser";
 NSString *const UFPFMessageGroupKeyLastMessage = @"lastMessage";
 NSString *const UFPFMessageGroupKeyUnreadMessageCount = @"unreadMessageCount";
 

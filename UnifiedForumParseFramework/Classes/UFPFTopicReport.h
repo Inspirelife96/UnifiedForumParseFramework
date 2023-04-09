@@ -10,10 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class UFPFTopic;
+@class UFPFUserProfile;
 
 @interface UFPFTopicReport : PFObject <PFSubclassing>
 
-@property (nonatomic, strong) PFUser *fromUser;
+@property (nonatomic, strong) UFPFUserProfile *fromUserProfile;
 @property (nonatomic, strong) UFPFTopic *toTopic;
 @property (nonatomic, strong) NSNumber *reason;
 

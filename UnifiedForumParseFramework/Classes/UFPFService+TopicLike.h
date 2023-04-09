@@ -7,10 +7,11 @@
 
 #import "UFPFService.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
 @class UFPFTopic;
 @class UFPFTopicLike;
+@class UFPFUserProfile;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFService (TopicLike)
 
@@ -18,17 +19,17 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<PFUser *> *)findUsersWhoLikesTopic:(UFPFTopic *)toTopic page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error;
 
 // 查找用户喜欢的Topic
-+ (NSArray<UFPFTopic *> *)findTopicsLikedByUser:(PFUser *)fromUser page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error;
++ (NSArray<UFPFTopic *> *)findTopicsLikedByUser:(UFPFUserProfile *)fromUserProfile page:(NSInteger)page pageCount:(NSInteger)pageCount error:(NSError **)error;
 
 // 判断用户是否喜欢这个Topic
-+ (BOOL)isTopic:(UFPFTopic *)topic likedbyUser:(PFUser *)user error:(NSError **)error;
++ (BOOL)isTopic:(UFPFTopic *)topic likedbyUserProfile:(UFPFUserProfile *)userProfile error:(NSError **)error;
 
 // 添加
-+ (UFPFTopicLike *)addTopicLikeWithFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic error:(NSError **)error;
++ (UFPFTopicLike *)addTopicLikeWithFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic error:(NSError **)error;
 
 // 删除
 + (BOOL)deleteTopicLike:(UFPFTopicLike *)topicLike error:(NSError **)error;
-+ (BOOL)deleteTopicLikeFromUser:(PFUser *)fromUser toTopic:(UFPFTopic *)toTopic error:(NSError **)error;
++ (BOOL)deleteTopicLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toTopic:(UFPFTopic *)toTopic error:(NSError **)error;
 
 @end
 

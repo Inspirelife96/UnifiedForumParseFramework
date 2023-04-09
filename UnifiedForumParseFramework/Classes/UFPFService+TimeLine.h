@@ -8,12 +8,13 @@
 #import "UFPFService.h"
 
 @class UFPFTimeLine;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFService (TimeLine)
 
-+ (NSArray<UFPFTimeLine *> *)findTimeLineOfUser:(PFUser *)fromUser
++ (NSArray<UFPFTimeLine *> *)findTimeLineOfUser:(UFPFUserProfile *)fromUserProfile
                                            page:(NSInteger)page
                                       pageCount:(NSInteger)pageCount
                                           error:(NSError **)error;

@@ -13,8 +13,8 @@
 
 @implementation UFPFMessageGroup
 
-@dynamic fromUser;
-@dynamic toUser;
+@dynamic fromUserProfile;
+@dynamic toUserProfile;
 @dynamic lastMessage;
 @dynamic unreadMessageCount;
 

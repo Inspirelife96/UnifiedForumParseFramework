@@ -9,20 +9,21 @@
 
 @class UFPFPost;
 @class UFPFPostLike;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface UFPFService (PostLike)
 
 // 判断用户是否喜欢这个Post
-+ (BOOL)isPost:(UFPFPost *)post likedbyUser:(PFUser *)user error:(NSError **)error;
++ (BOOL)isPost:(UFPFPost *)post likedbyUserProfile:(UFPFUserProfile *)userProfile error:(NSError **)error;
 
 // 添加
-+ (UFPFPostLike *)addPostLikeWithFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost error:(NSError **)error;
++ (UFPFPostLike *)addPostLikeWithFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost error:(NSError **)error;
 
 // 删除
 + (BOOL)deletePostLike:(UFPFPostLike *)postLike error:(NSError **)error;
-+ (BOOL)deletePostLikeFromUser:(PFUser *)fromUser toPost:(UFPFPost *)toPost error:(NSError **)error;
++ (BOOL)deletePostLikeFromUserProfile:(UFPFUserProfile *)fromUserProfile toPost:(UFPFPost *)toPost error:(NSError **)error;
 
 @end
 

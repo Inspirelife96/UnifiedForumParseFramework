@@ -8,6 +8,7 @@
 #import "UFPFService.h"
 
 @class UFPFTopic;
+@class UFPFUserProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Share表的内容不做删除，不激活Activity。
 
 + (BOOL)addShareTopic:(UFPFTopic *)Topic
-             fromUser:(PFUser *)fromUser
+             fromUserProfile:(UFPFUserProfile *)fromUserProfile
            toPlatform:(NSString *)toPlatform
                 error:(NSError **)error;
 

@@ -8,8 +8,8 @@
 
 #import <Parse/Parse-umbrella.h>
 #import <UFPFService.h>
-#import <UFPFService+Topic.h>
-#import <UFPFService+User.h>
+#import <UFPFService+UFPFTopic.h>
+#import <UFPFService+UFPFUser.h>
 
 @import XCTest;
 
@@ -45,11 +45,11 @@
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 
     
-    NSError *error = nil;
+//    NSError *error = nil;
     
 //    [UFPFService logInWithAnonymous:&error];
     
-    NSArray *array = [UFPFService findTopicsOrderBy:@"createdAt" page:0 pageCount:10 error:&error];
+//    NSArray *array = [UFPFService findTopicsOrderBy:@"createdAt" page:0 pageCount:10 error:&error];
     
     
 //    PFQuery *query = [PFQuery queryWithClassName:@"Topic"];
